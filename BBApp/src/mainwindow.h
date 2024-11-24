@@ -18,14 +18,12 @@
 #include "views/harmonics_central.h"
 #include "views/tg_central.h"
 #include "views/phase_noise_central.h"
-
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
+   ~MainWindow();
     Session* GetSession() { return session; }
     static BBStatusBar* GetStatusBar() { return status_bar; }
 
@@ -33,6 +31,7 @@ protected:
     void closeEvent(QCloseEvent *);
 
 private:
+
     void InitMenuBar();
     void SaveState();
     void RestoreState();

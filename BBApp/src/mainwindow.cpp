@@ -62,7 +62,6 @@ MainWindow::MainWindow(QWidget *parent)
     addDockWidget(Qt::LeftDockWidgetArea, measure_panel);
     addDockWidget(Qt::RightDockWidgetArea, demodPanel);
     addDockWidget(Qt::LeftDockWidgetArea, tgPanel);
-
     status_bar = new BBStatusBar();
     setStatusBar(status_bar);
 
@@ -75,10 +74,9 @@ MainWindow::MainWindow(QWidget *parent)
     toolBar->setFloatable(false);
     toolBar->layout()->setContentsMargins(0, 0, 0, 0);
     toolBar->layout()->setSpacing(0);
-
+    // Tạo một splitter để chia khu vực chính
     centralStack = new CentralStack(this);
-    setCentralWidget(centralStack);
-
+        // Thêm một widget trống vào phần dưới của splitter
     sweepCentral = new SweepCentral(session, toolBar);
     sweepCentral->EnableToolBarActions(false);
     centralStack->AddWidget(sweepCentral);
@@ -96,6 +94,25 @@ MainWindow::MainWindow(QWidget *parent)
     phaseNoiseCentral = new PhaseNoiseCentral(session, toolBar);
     phaseNoiseCentral->EnableToolBarActions(false);
     centralStack->AddWidget(phaseNoiseCentral);
+    QSplitter *splitter = new QSplitter(Qt::Vertical, this); // Chia dọc
+
+    // Thêm CentralStack vào phần trên của splitter
+    splitter->addWidget(centralStack);
+
+    // Phần điều khiển RTL-SDR
+
+    QWidget *emptyWidget = new QWidget(this);
+    emptyWidget->setStyleSheet("background-color: lightgray;"); // Màu cho dễ nhìn
+    splitter->addWidget(emptyWidget);
+// Thiết lập tỉ lệ chiều cao giữa hai phần
+    splitter->setSizes(QList<int>() << 500 << 250); // 500px cho CentralStack, 250px cho phần dưới
+    splitter->setStretchFactor(0, 1); // Phần trên co giãn
+    splitter->setStretchFactor(1, 0); // Phần dưới không co giãn
+
+    // Đặt splitter làm widget trung tâm
+    setCentralWidget(splitter);
+
+
 
     // Add Single/continuous/preset button to toolbar
     QWidget *spacer = new QWidget();
