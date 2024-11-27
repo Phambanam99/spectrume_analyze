@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
     toolBar->layout()->setSpacing(0);
     // Tạo một splitter để chia khu vực chính
     centralStack = new CentralStack(this);
-        // Thêm một widget trống vào phần dưới của splitter
+    // Thêm một widget trống vào phần dưới của splitter
     sweepCentral = new SweepCentral(session, toolBar);
     sweepCentral->EnableToolBarActions(false);
     centralStack->AddWidget(sweepCentral);
@@ -633,30 +633,37 @@ void MainWindow::PresetDeviceInThread(QEventLoop *el)
 // If a single device is connected open it, else
 //   report a number messages to the user.
 void MainWindow::connectDeviceUponOpen()
-{
-    // Look for no devices or more than one device
-    auto list = session->device->GetDeviceList();
+{   auto list = session->device->GetDeviceList();
     if(list.size() == 0) {
         QMessageBox::warning(this, "Signal Hound", "No Device Found.");
-        return;
     }
     if(list.size() > 1) {
         QMessageBox::warning(this, "Message", "More than one device found. "
                              "Use the File->Connect menu to select which device to open.");
-        return;
     }
-
-    DeviceConnectionInfo item = list.at(0);
-    QMap<QString, QVariant> devInfo;
-
-    if(item.series == saSeries) {
-        devInfo["Series"] = saSeries;
-    } else {
-        devInfo["Series"] = bbSeries;
+    if(list.size() == 1){
+        DeviceConnectionInfo item = list.at(0);
+        QMap<QString, QVariant> devInfo;
+        if(item.series == saSeries) {
+            devInfo["Series"] = saSeries;
+        } else {
+            devInfo["Series"] = bbSeries;
+        }
+        devInfo["SerialNumber"] = item.serialNumber;
+        OpenDevice(devInfo);
     }
-    devInfo["SerialNumber"] = item.serialNumber;
+    auto list1 = session -> device -> GetRtlList();
+    if(list1.size() == 0) {
+        QMessageBox::warning(this, "RTL-SDR", "No Device Found.");
+    }
+    else {
+        QString message = QString("%1 Device%2 Found.")
+                              .arg(list1.size())
+                              .arg(list1.size() > 1 ? "s" : "");
+        QMessageBox::warning(this, "RTL-SDR", message);
+    }
+    // Look for no devices or more than one device
 
-    OpenDevice(devInfo);
 }
 
 void MainWindow::connectDevice(QAction *a)

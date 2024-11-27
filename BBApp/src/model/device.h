@@ -8,7 +8,7 @@
 #include "lib/bb_api.h"
 #include "lib/macros.h"
 #include "lib/device_traits.h"
-
+#include "lib/rtlsdr.h"
 #include "sweep_settings.h"
 #include "demod_settings.h"
 #include "audio_settings.h"
@@ -22,7 +22,8 @@ class Preferences;
 
 enum DeviceSeries {
     saSeries,
-    bbSeries
+    bbSeries,
+    rtlSeries,
 };
 
 // Calibration state regarding the initial store through
@@ -34,6 +35,10 @@ enum TgCalState {
 
 struct DeviceConnectionInfo {
     int serialNumber;
+    DeviceSeries series;
+};
+struct DeviceRtlInfo {
+    QString serialNumber;
     DeviceSeries series;
 };
 
@@ -64,7 +69,7 @@ public:
     virtual ~Device() = 0;
 
     QList<DeviceConnectionInfo> GetDeviceList() const;
-
+    QList<DeviceRtlInfo> GetRtlList() const;
     virtual bool OpenDevice() = 0;
     virtual bool OpenDeviceWithSerial(int serialToOpen) = 0;
     virtual int GetNativeDeviceType() const = 0;

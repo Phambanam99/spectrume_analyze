@@ -4,7 +4,7 @@
 #include "device.h"
 #include "lib/bb_api.h"
 #include "lib/sa_api.h"
-
+#include "lib/rtlsdr.h"
 QList<DeviceConnectionInfo> Device::GetDeviceList() const
 {
     QList<DeviceConnectionInfo> deviceList;
@@ -27,6 +27,29 @@ QList<DeviceConnectionInfo> Device::GetDeviceList() const
         deviceList.push_back(info);
     }
 
+    return deviceList;
+}
+QList<DeviceRtlInfo> Device::GetRtlList() const
+{
+    QList<DeviceRtlInfo> deviceList;
+    DeviceRtlInfo info;
+
+    QString serialNumbers;
+    int deviceCount;
+
+    info.series = rtlSeries;
+    deviceCount = rtlsdr_get_device_count();
+    for (int i = 0; i < deviceCount; i++) {
+           const char *device_name = rtlsdr_get_device_name(i);
+           char manufacturer[256], product[256], serial[256];
+           if (rtlsdr_get_device_usb_strings(i, manufacturer, product, serial) == 0) {
+//               QDebug("  Manufacturer: %s\n", manufacturer);
+//               QDebug("  Product: %s\n", product);
+//               QDebug("  Serial: %s\n", serial);
+               info.serialNumber =  serial ;
+               deviceList.push_back(info);
+           }
+       }
     return deviceList;
 }
 

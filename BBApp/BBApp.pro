@@ -58,7 +58,8 @@ SOURCES += src/main.cpp \
     src/views/phase_noise_plot.cpp \
     src/widgets/if_output_dialog.cpp \
     src/widgets/self_test_dialog.cpp \
-    src/model/preferences.cpp
+    src/model/preferences.cpp \
+    src/model/device_rtlsdr.cpp
 
 HEADERS += src/mainwindow.h \
     src/lib/frequency.h \
@@ -118,7 +119,10 @@ HEADERS += src/mainwindow.h \
     src/views/phase_noise_plot.h \
     src/widgets/if_output_dialog.h \
     src/widgets/self_test_dialog.h \
-    src/version.h
+    src/version.h \
+    src/lib/rtlsdr.h \
+    src/lib/rtl-sdr_export.h \
+    src/model/device_rtlsdr.h
 
 OTHER_FILES += \
     style_sheet.css \
@@ -128,7 +132,8 @@ OTHER_FILES += \
 
 LIBS += \
     -Ldebug -lbb_api \
-    -Ldebug -lsa_api
+    -Ldebug -lsa_api \
+    -Ldebug -lrtlsdr
 
 INCLUDEPATH += src external_libraries
 
