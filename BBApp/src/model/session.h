@@ -1,16 +1,17 @@
 #ifndef SESSION_H
 #define SESSION_H
-
 #include "device_bb60a.h"
 #include "device_sa.h"
-
+#include "device_rtlsdr.h"
 #include "sweep_settings.h"
 #include "demod_settings.h"
 #include "trace_manager.h"
 #include "audio_settings.h"
 #include "color_prefs.h"
 #include "preferences.h"
-
+#include "rtl_sweep_settings.h"
+#include <QList>              // Dùng QList của Qt
+#include <QSharedPointer>     // Dùng QSharedPointer để quản lý bộ nhớ
 const int MAX_TITLE_LEN = 127;
 
 class Session : public QObject {
@@ -29,8 +30,12 @@ public:
     static QString title;
 
     Device *device;
+    // Sử dụng QList để lưu trữ các thiết bị
+    QList<QSharedPointer<Device>> devices;
     // Sweep/Real-time related
     SweepSettings *sweep_settings;
+    //RTL sweep setting
+    RTL_SDR_Settings *rtl_sweep_settings;
     TraceManager *trace_manager;
     // Demod related
     DemodSettings *demod_settings;
@@ -40,7 +45,6 @@ public:
     // Preferences/General Settings
     ColorPrefs colors;
     Preferences prefs;
-
     bool isInPlaybackMode;
 };
 

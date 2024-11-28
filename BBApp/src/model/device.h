@@ -72,21 +72,23 @@ public:
     QList<DeviceRtlInfo> GetRtlList() const;
     virtual bool OpenDevice() = 0;
     virtual bool OpenDeviceWithSerial(int serialToOpen) = 0;
-    virtual int GetNativeDeviceType() const = 0;
+    virtual int GetNativeDeviceType() const {
+        return 0;
+    }
     virtual bool CloseDevice() = 0;
     virtual bool Abort() = 0;
     virtual bool Preset() = 0;
-    virtual bool Reconfigure(const SweepSettings *s, Trace *t) = 0;
+    virtual bool Reconfigure(const SweepSettings *s, Trace *t){return false;}
     // Returns false on an unfixable error
-    virtual bool GetSweep(const SweepSettings *s, Trace *t) = 0;
-    virtual bool GetRealTimeFrame(Trace &t, RealTimeFrame &frame) = 0;
-    virtual bool Reconfigure(const DemodSettings *s, IQDescriptor *capture) = 0;
-    virtual bool GetIQ(IQCapture *iqc) = 0;
-    virtual bool GetIQFlush(IQCapture *iqc, bool flush) = 0;
+    virtual bool GetSweep(const SweepSettings *s, Trace *t) {return false;}
+    virtual bool GetRealTimeFrame(Trace &t, RealTimeFrame &frame) {return false;}
+    virtual bool Reconfigure(const DemodSettings *s, IQDescriptor *capture) { return false;}
+    virtual bool GetIQ(IQCapture *iqc) { return false;}
+    virtual bool GetIQFlush(IQCapture *iqc, bool flush)  { return false;}
     virtual bool ConfigureForTRFL(double center, MeasRcvrRange range,
-                                  int atten, int gain, IQDescriptor &desc) = 0;
-    virtual bool ConfigureAudio(const AudioSettings &as) = 0;
-    virtual bool GetAudio(float *audio) = 0;
+                                  int atten, int gain, IQDescriptor &desc) { return false;}
+    virtual bool ConfigureAudio(const AudioSettings &as) { return false;}
+    virtual bool GetAudio(float *audio) { return false;}
 
     virtual bool IsCompatibleWithTg() const { return false; }
     virtual bool AttachTg() { return false; }
@@ -98,20 +100,20 @@ public:
     virtual void TgStoreThrough() {}
     virtual void TgStoreThroughPad() {}
 
-    virtual int MsPerIQCapture() const = 0;
+    virtual int MsPerIQCapture() const { return false;}
 
     // Only defined for SA devices
     virtual void ConfigureIFOutput(double inputFreq, double outputFreq,
                                    int intputAtten, int outputGain) {}
 
     // Return the timebase that was set or is going to be set
-    virtual int SetTimebase(int new_val) = 0;
+    virtual int SetTimebase(int new_val) { return 0;}
 
     bool IsOpen() const { return open; }
     int Handle() const { return id; }
 
     virtual QString GetDeviceString() const = 0;
-    virtual void UpdateDiagnostics() = 0;
+    virtual void UpdateDiagnostics() {}
 
     virtual const char* GetLastStatusString() const = 0;
 
@@ -123,11 +125,11 @@ public:
     float LastConfiguredTemp() const { return last_temp; }
     float CurrentTemp() const { return current_temp; }
     float Voltage() const { return voltage; }
-    virtual bool IsPowered() const = 0;
+    virtual bool IsPowered() const { return false;}
     bool ADCOverflow() const { return adc_overflow; }
 
     int TimebaseReference() const { return timebase_reference; }
-    virtual bool NeedsTempCal() const = 0;
+    virtual bool NeedsTempCal() const { return false;}
     TgCalState GetTgCalState() const { return tgCalState; }
     QSize RealTimeFrameSize() const { return rtFrameSize; }
 

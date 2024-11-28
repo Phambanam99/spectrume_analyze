@@ -1,8 +1,10 @@
 #include "device_rtlsdr.h"
 #include <QDebug>
-
+#include <QMessageBox>
 DeviceRtlSdr::DeviceRtlSdr(const Preferences *preferences)
-    : Device(preferences), device(nullptr), center_freq(100000000), sample_rate(2048000), gain(0), last_status(0) {}
+    : Device(preferences), device(nullptr), center_freq(100000000), sample_rate(2048000), gain(0), last_status(0) {
+    device_type = DeviceTypeRtlSdr;
+}
 
 DeviceRtlSdr::~DeviceRtlSdr() {
     CloseDevice();
@@ -18,22 +20,46 @@ bool DeviceRtlSdr::OpenDevice() {
     return true;
 }
 
-//bool DeviceRtlSdr::OpenDeviceWithSerial(const std::string &serial) {
-//    int device_index = rtlsdr_get_index_by_serial(serial.c_str());
-//    if (device_index < 0) {
-//        qDebug() << "Failed to find device with serial:" << QString::fromStdString(serial);
-//        last_status = -1;
-//        return false;
-//    }
+bool DeviceRtlSdr::OpenDeviceWithSerial(int serialToOpen) {
+        rtlsdr_dev_t* dev = nullptr;
+    // Get the count of available RTL-SDR devices
+        int deviceCount = rtlsdr_get_device_count();
+        if (deviceCount == 0) {
+            qDebug() << "No RTL-SDR devices found!";
+            return false;
+        }
 
-//    if (rtlsdr_open(&device, device_index) != 0) {
-//        qDebug() << "Failed to open RTL-SDR device with serial:" << QString::fromStdString(serial);
-//        last_status = -1;
-//        return false;
-//    }
-//    qDebug() << "Opened RTL-SDR device with serial:" << QString::fromStdString(serial);
-//    return true;
-//}
+        // Iterate over all devices to find the one with the matching serial number
+        for (int i = 0; i < deviceCount; ++i) {
+            char manufacturer[256];
+            char product[256];
+            char serial[256];
+
+            // Retrieve the device's information (serial number, manufacturer, etc.)
+            if (rtlsdr_get_device_usb_strings(i, manufacturer, product, serial) < 0) {
+                qDebug() << "Failed to get device strings for device " << i;
+                continue;
+            }
+
+            // Check if the serial number matches the one we're looking for
+            if (QString(serial) == QString::number(serialToOpen)) {
+                qDebug() << "Found matching device with serial: " << serial;
+
+                // Open the device
+                if (rtlsdr_open(&dev, i) < 0) {
+                    qDebug() << "Failed to open RTL-SDR device with serial: " << serial;
+                    return false;
+                }
+
+                qDebug() << "Successfully opened RTL-SDR device with serial: " << serial;
+                return true;
+            }
+        }
+
+        // If no matching device is found, show an error message
+        QMessageBox::warning(nullptr, "Device Not Found", "No device with the specified serial number was found.");
+        return false;
+}
 
 bool DeviceRtlSdr::CloseDevice() {
     if (device) {
@@ -115,6 +141,7 @@ bool DeviceRtlSdr::GetIQData(std::vector<uint8_t> &iq_buffer, int &n_read) {
 QString DeviceRtlSdr::GetDeviceString() const {
     return QString("RTL-SDR Device");
 }
+
 
 const char* DeviceRtlSdr::GetLastStatusString() const {
     return "Status: OK";

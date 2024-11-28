@@ -6,9 +6,9 @@
 #include "widgets/measuring_receiver_dialog.h"
 #include "widgets/if_output_dialog.h"
 #include "widgets/self_test_dialog.h"
-
+#include "widgets/rtl_sweep_panel.h"
 #include "version.h"
-
+#include "model/Device.h"
 #include <QFile>
 #include <QSplitter>
 #include <QTreeView>
@@ -16,6 +16,7 @@
 #include <QInputDialog>
 #include <QtPrintSupport>
 #include <QMessageBox>
+#include <QSharedPointer>
 
 static const QString utilitiesTgControlString = "Tracking Generator Controls";
 static const QString utilitiesIFOutputString = "SA124 IF Output";
@@ -101,9 +102,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Phần điều khiển RTL-SDR
 
-    QWidget *emptyWidget = new QWidget(this);
-    emptyWidget->setStyleSheet("background-color: lightgray;"); // Màu cho dễ nhìn
-    splitter->addWidget(emptyWidget);
+//    QWidget *emptyWidget = new QWidget(this);
+//    emptyWidget->setStyleSheet("background-color: lightgray;"); // Màu cho dễ nhìn
+    rtl_sweep_panel = new RtlSweepPanel(tr("RTL-SDR Config"), this, session);
+    rtl_sweep_panel -> setObjectName("RtlSweepSettingsPanel");
+    splitter->addWidget(rtl_sweep_panel);
 // Thiết lập tỉ lệ chiều cao giữa hai phần
     splitter->setSizes(QList<int>() << 500 << 250); // 500px cho CentralStack, 250px cho phần dưới
     splitter->setStretchFactor(0, 1); // Phần trên co giãn
@@ -633,37 +636,39 @@ void MainWindow::PresetDeviceInThread(QEventLoop *el)
 // If a single device is connected open it, else
 //   report a number messages to the user.
 void MainWindow::connectDeviceUponOpen()
-{   auto list = session->device->GetDeviceList();
-    if(list.size() == 0) {
-        QMessageBox::warning(this, "Signal Hound", "No Device Found.");
-    }
-    if(list.size() > 1) {
-        QMessageBox::warning(this, "Message", "More than one device found. "
-                             "Use the File->Connect menu to select which device to open.");
-    }
-    if(list.size() == 1){
-        DeviceConnectionInfo item = list.at(0);
-        QMap<QString, QVariant> devInfo;
-        if(item.series == saSeries) {
-            devInfo["Series"] = saSeries;
+{   auto list = session->devices;
+//    if(list.size() == 0) {
+//        QMessageBox::warning(this, "Device", "No Device Found.");
+//    }
+//    if(list.size() > 1) {
+//        QMessageBox::warning(this, "Message", "More than one device found. "
+//                             "Use the File->Connect menu to select which device to open.");
+//    }
+    int countBB = 0;
+    int countRtl = 0;
+    for (int i = 0; i < list.size() ; i++){
+        QSharedPointer<Device> device = list.at(i);
+        Device& rawDeviceRef = *device;
+        QList<DeviceConnectionInfo> listDeviceInfoBB = rawDeviceRef.GetDeviceList();
+        QList<DeviceRtlInfo> listDeviceInfoRtl = rawDeviceRef.GetRtlList();
+        if(listDeviceInfoBB.size() > 0){
+            DeviceConnectionInfo item = listDeviceInfoBB.at(0);
+            QMap<QString, QVariant> devInfo;
+            if(item.series == saSeries) {
+                devInfo["Series"] = saSeries;
+            } else {
+                devInfo["Series"] = bbSeries;
+            }
+            devInfo["SerialNumber"] = item.serialNumber;
+            countBB += listDeviceInfoBB.size();
+            OpenDevice(devInfo);
         } else {
-            devInfo["Series"] = bbSeries;
-        }
-        devInfo["SerialNumber"] = item.serialNumber;
-        OpenDevice(devInfo);
-    }
-    auto list1 = session -> device -> GetRtlList();
-    if(list1.size() == 0) {
-        QMessageBox::warning(this, "RTL-SDR", "No Device Found.");
-    }
-    else {
-        QString message = QString("%1 Device%2 Found.")
-                              .arg(list1.size())
-                              .arg(list1.size() > 1 ? "s" : "");
-        QMessageBox::warning(this, "RTL-SDR", message);
-    }
-    // Look for no devices or more than one device
+             countRtl += listDeviceInfoRtl.size();
 
+        }
+    }
+      QString numberDevices = QString("Signal Hound %1 \n RTL-SDR %2").arg(countBB).arg(countRtl);
+      QMessageBox::warning(this, "Devices", numberDevices);
 }
 
 void MainWindow::connectDevice(QAction *a)

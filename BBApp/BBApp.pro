@@ -59,7 +59,9 @@ SOURCES += src/main.cpp \
     src/widgets/if_output_dialog.cpp \
     src/widgets/self_test_dialog.cpp \
     src/model/preferences.cpp \
-    src/model/device_rtlsdr.cpp
+    src/model/device_rtlsdr.cpp \
+    src/widgets/rtl_sweep_panel.cpp \
+    src/model/rtl_sweep_settings.cpp
 
 HEADERS += src/mainwindow.h \
     src/lib/frequency.h \
@@ -122,7 +124,9 @@ HEADERS += src/mainwindow.h \
     src/version.h \
     src/lib/rtlsdr.h \
     src/lib/rtl-sdr_export.h \
-    src/model/device_rtlsdr.h
+    src/model/device_rtlsdr.h \
+    src/widgets/rtl_sweep_panel.h \
+    src/model/rtl_sweep_settings.h
 
 OTHER_FILES += \
     style_sheet.css \

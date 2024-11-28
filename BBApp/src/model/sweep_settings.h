@@ -22,7 +22,7 @@ public:
     bool operator==(const SweepSettings &other) const;
     bool operator!=(const SweepSettings &other) const;
 
-    void LoadDefaults();
+    virtual void LoadDefaults();
     bool Load(QSettings &s);
     bool Save(QSettings &s) const;
 
@@ -83,12 +83,10 @@ public:
     int tgSweepSize;
     bool tgHighRangeSweep;
     bool tgPassiveDevice;
-
-protected:
-
-private:
+    //before private
+    virtual void UpdateProgram();
     void AutoBandwidthAdjust(bool force);
-    void UpdateProgram();
+
 
     OperationalMode mode;
 
@@ -114,6 +112,10 @@ private:
     int detector;
     // Set in Settings File Menu
     bool rejection;
+protected:
+
+private:
+
 
 signals:
     // Emit when settings successfully changed

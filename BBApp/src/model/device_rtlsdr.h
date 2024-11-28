@@ -2,7 +2,7 @@
 #define DEVICE_RTLSDR_H
 
 #include "device.h"
-
+#include "../lib/device_traits.h"
 
 class Preferences;
 
@@ -13,7 +13,7 @@ public:
 
     // Device control
     virtual bool OpenDevice();
-//    virtual bool OpenDeviceWithSerial(int serialToOpen);
+    virtual bool OpenDeviceWithSerial(int serialToOpen);
     virtual bool CloseDevice();
     virtual bool Abort();
     virtual bool Preset();
@@ -31,6 +31,7 @@ public:
     virtual const char* GetLastStatusString() const;
 
 private:
+
     rtlsdr_dev_t *device;
     uint32_t center_freq;
     uint32_t sample_rate;

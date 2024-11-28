@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QStatusBar>
 #include <QAction>
-
+#include <QsharedPointer>
 #include "model/session.h"
 #include "widgets/measure_panel.h"
 #include "widgets/sweep_panel.h"
@@ -18,6 +18,7 @@
 #include "views/harmonics_central.h"
 #include "views/tg_central.h"
 #include "views/phase_noise_central.h"
+#include "widgets/rtl_sweep_panel.h"
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -62,6 +63,7 @@ private:
     QMenu *help_menu;
 
     SweepPanel *sweep_panel;
+    RtlSweepPanel *rtl_sweep_panel;
     MeasurePanel *measure_panel;
     DemodPanel *demodPanel;
     TgCtrlPanel *tgPanel;

@@ -10,7 +10,8 @@ enum DeviceType {
     DeviceTypeSA44B,
     DeviceTypeSA124,
     DeviceTypeBB60A,
-    DeviceTypeBB60C
+    DeviceTypeBB60C,
+    DeviceTypeRtlSdr
 };
 
 // BB60C values by default ?
