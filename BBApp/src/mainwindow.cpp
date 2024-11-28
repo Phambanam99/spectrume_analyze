@@ -636,21 +636,10 @@ void MainWindow::PresetDeviceInThread(QEventLoop *el)
 // If a single device is connected open it, else
 //   report a number messages to the user.
 void MainWindow::connectDeviceUponOpen()
-{   auto list = session->devices;
-//    if(list.size() == 0) {
-//        QMessageBox::warning(this, "Device", "No Device Found.");
-//    }
-//    if(list.size() > 1) {
-//        QMessageBox::warning(this, "Message", "More than one device found. "
-//                             "Use the File->Connect menu to select which device to open.");
-//    }
+{   auto listDeviceInfoBB = session->device->GetDeviceList();
+    auto listDeviceInfoRtl = session -> device -> GetRtlList();
     int countBB = 0;
     int countRtl = 0;
-    for (int i = 0; i < list.size() ; i++){
-        QSharedPointer<Device> device = list.at(i);
-        Device& rawDeviceRef = *device;
-        QList<DeviceConnectionInfo> listDeviceInfoBB = rawDeviceRef.GetDeviceList();
-        QList<DeviceRtlInfo> listDeviceInfoRtl = rawDeviceRef.GetRtlList();
         if(listDeviceInfoBB.size() > 0){
             DeviceConnectionInfo item = listDeviceInfoBB.at(0);
             QMap<QString, QVariant> devInfo;
@@ -664,9 +653,9 @@ void MainWindow::connectDeviceUponOpen()
             OpenDevice(devInfo);
         } else {
              countRtl += listDeviceInfoRtl.size();
-
+             qDebug() << "rtl " << countRtl;
         }
-    }
+
       QString numberDevices = QString("Signal Hound %1 \n RTL-SDR %2").arg(countBB).arg(countRtl);
       QMessageBox::warning(this, "Devices", numberDevices);
 }

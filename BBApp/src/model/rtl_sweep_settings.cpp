@@ -9,7 +9,7 @@ RTL_SDR_Settings::RTL_SDR_Settings() : device(nullptr) {
 
 RTL_SDR_Settings::~RTL_SDR_Settings() {
     if (device) {
-        rtlsdr_close(device);
+        device->CloseDevice();
     }
 }
 
@@ -70,12 +70,12 @@ void RTL_SDR_Settings::LoadDefaults() {
     detector = 0; // Example detector
     rejection = false;
 
-    // Initialize RTL-SDR device
-    if (rtlsdr_open(&device, 0) < 0) {
-        qDebug() << "Failed to open RTL-SDR device";
-    } else {
-        qDebug() << "Opened device rtl-sdr";
-    }
+//    // Initialize RTL-SDR device
+//    if (rtlsdr_open(&device, 0) < 0) {
+//        qDebug() << "Failed to open RTL-SDR device";
+//    } else {
+//        qDebug() << "Opened device rtl-sdr";
+//    }
 }
 
 bool RTL_SDR_Settings::Load(QSettings &s) {
@@ -201,3 +201,22 @@ void RTL_SDR_Settings::setRejection(bool image_reject) {
     rejection = image_reject;
     UpdateProgram();
 }
+void RTL_SDR_Settings::handleDeviceSelection(int index) {
+        if (index == 0) {
+           qDebug() << "No device selected.";
+           if(device -> CloseDevice())
+           {
+               return;
+           }
+           else {
+             qDebug() << "Cannot close device.";
+           }
+       }
+       // Handle opening the RTL-SDR device based on the selected index
+       qDebug() << "Selected device index:" << index;
+        // Open the first RTL-SDR device
+       if (device ->OpenDeviceWithSerial(index)) {
+           qDebug() << "Device opened successfully!" << index;
+       }
+   }
+

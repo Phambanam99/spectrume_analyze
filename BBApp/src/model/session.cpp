@@ -5,21 +5,14 @@ QString Session::title;
 
 Session::Session()
 {
-//    device = new DeviceBB60A(&prefs);
-//    //device = new DeviceSA(&prefs);
+    device = new DeviceBB60A(&prefs);
+    //device = new DeviceSA(&prefs);
 
-//    device_traits::set_device_type(device->GetDeviceType());
+    device_traits::set_device_type(device->GetDeviceType());
 
-    // Dùng QSharedPointer để quản lý bộ nhớ tự động cho thiết bị
-   devices.append(QSharedPointer<Device>(new DeviceBB60A(&prefs)));  // Thêm một thiết bị bat ky
-   devices.append(QSharedPointer<Device>(new DeviceRtlSdr(&prefs)));  // Thêm thiết bị SA nếu cần
-
-   // Cập nhật loại thiết bị cho tất cả các thiết bị
-   for (auto device : devices) {
-       device_traits::set_device_type(device->GetDeviceType());
-   }
     sweep_settings = new SweepSettings();
     rtl_sweep_settings = new RTL_SDR_Settings();
+    rtl_sweep_settings->setDevice(new DeviceRtlSdr(&prefs));
     trace_manager = new TraceManager();
     demod_settings = new DemodSettings();
     audio_settings = new AudioSettings();
@@ -38,6 +31,8 @@ Session::~Session()
     delete trace_manager;
     delete demod_settings;
     delete audio_settings;
+    // Delete device last
+       delete device;
 }
 
 void Session::LoadDefaults()

@@ -28,37 +28,17 @@ bool DeviceRtlSdr::OpenDeviceWithSerial(int serialToOpen) {
             qDebug() << "No RTL-SDR devices found!";
             return false;
         }
-
-        // Iterate over all devices to find the one with the matching serial number
-        for (int i = 0; i < deviceCount; ++i) {
-            char manufacturer[256];
-            char product[256];
-            char serial[256];
-
-            // Retrieve the device's information (serial number, manufacturer, etc.)
-            if (rtlsdr_get_device_usb_strings(i, manufacturer, product, serial) < 0) {
-                qDebug() << "Failed to get device strings for device " << i;
-                continue;
-            }
-
-            // Check if the serial number matches the one we're looking for
-            if (QString(serial) == QString::number(serialToOpen)) {
-                qDebug() << "Found matching device with serial: " << serial;
-
-                // Open the device
-                if (rtlsdr_open(&dev, i) < 0) {
-                    qDebug() << "Failed to open RTL-SDR device with serial: " << serial;
-                    return false;
-                }
-
-                qDebug() << "Successfully opened RTL-SDR device with serial: " << serial;
-                return true;
-            }
+// 1 rtl-sdr
+        if (rtlsdr_open(&dev, 0) < 0) {
+            qDebug() << "Failed to open RTL-SDR device";
+            return false;
         }
 
+        device = dev;
+         qDebug() << "Successfully opened RTL-SDR device " << device ;
         // If no matching device is found, show an error message
-        QMessageBox::warning(nullptr, "Device Not Found", "No device with the specified serial number was found.");
-        return false;
+        QMessageBox::warning(nullptr, "RTL-SDR", "Successfully opened RTL-SDR device");
+        return true;
 }
 
 bool DeviceRtlSdr::CloseDevice() {
@@ -66,8 +46,11 @@ bool DeviceRtlSdr::CloseDevice() {
         rtlsdr_close(device);
         device = nullptr;
         qDebug() << "RTL-SDR device closed.";
+        return true;
     }
-    return true;
+    return false;
+
+
 }
 
 bool DeviceRtlSdr::Abort() {

@@ -30,8 +30,6 @@ public:
     static QString title;
 
     Device *device;
-    // Sử dụng QList để lưu trữ các thiết bị
-    QList<QSharedPointer<Device>> devices;
     // Sweep/Real-time related
     SweepSettings *sweep_settings;
     //RTL sweep setting

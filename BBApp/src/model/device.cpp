@@ -43,9 +43,9 @@ QList<DeviceRtlInfo> Device::GetRtlList() const
            const char *device_name = rtlsdr_get_device_name(i);
            char manufacturer[256], product[256], serial[256];
            if (rtlsdr_get_device_usb_strings(i, manufacturer, product, serial) == 0) {
-//               QDebug("  Manufacturer: %s\n", manufacturer);
-//               QDebug("  Product: %s\n", product);
-//               QDebug("  Serial: %s\n", serial);
+               qDebug() << "  Manufacturer: " << manufacturer;
+               qDebug() << "  Product: " << product;
+               qDebug() << "  Serial: " << serial;
                info.serialNumber =  serial ;
                deviceList.push_back(info);
            }

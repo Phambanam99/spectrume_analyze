@@ -235,46 +235,6 @@ DESTDIR_TARGET = debug\BBApp.exe
 
 .SUFFIXES: .c .cpp .cc .cxx
 
-{..\BBApp\src}.cpp{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src}.cc{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src}.cxx{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src}.c{debug\}.obj::
-	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src\model}.cpp{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src\model}.cc{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src\model}.cxx{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src\model}.c{debug\}.obj::
-	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
 {.}.cpp{debug\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
@@ -315,42 +275,22 @@ DESTDIR_TARGET = debug\BBApp.exe
 	$<
 <<
 
-{..\BBApp\src\views}.cpp{debug\}.obj::
+{debug}.cpp{debug\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
 <<
 
-{..\BBApp\src\views}.cc{debug\}.obj::
+{debug}.cc{debug\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
 <<
 
-{..\BBApp\src\views}.cxx{debug\}.obj::
+{debug}.cxx{debug\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
 <<
 
-{..\BBApp\src\views}.c{debug\}.obj::
-	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src\kiss_fft}.cpp{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src\kiss_fft}.cc{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src\kiss_fft}.cxx{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\BBApp\src\kiss_fft}.c{debug\}.obj::
+{debug}.c{debug\}.obj::
 	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
 <<
@@ -375,22 +315,82 @@ DESTDIR_TARGET = debug\BBApp.exe
 	$<
 <<
 
-{debug}.cpp{debug\}.obj::
+{..\BBApp\src}.cpp{debug\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
 <<
 
-{debug}.cc{debug\}.obj::
+{..\BBApp\src}.cc{debug\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
 <<
 
-{debug}.cxx{debug\}.obj::
+{..\BBApp\src}.cxx{debug\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
 <<
 
-{debug}.c{debug\}.obj::
+{..\BBApp\src}.c{debug\}.obj::
+	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\model}.cpp{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\model}.cc{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\model}.cxx{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\model}.c{debug\}.obj::
+	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\kiss_fft}.cpp{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\kiss_fft}.cc{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\kiss_fft}.cxx{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\kiss_fft}.c{debug\}.obj::
+	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\views}.cpp{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\views}.cc{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\views}.cxx{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\BBApp\src\views}.c{debug\}.obj::
 	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
 <<
@@ -449,33 +449,33 @@ compiler_rcc_make_all: debug\qrc_bb_app.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) debug\qrc_bb_app.cpp
 debug\qrc_bb_app.cpp: ..\BBApp\resources\bb_app.qrc \
-		..\BBApp\resources\color_spectrogram.png \
-		..\BBApp\resources\style_sheet_light.css \
 		..\BBApp\resources\style_sheet_dark.css \
 		..\BBApp\resources\style_sheet_blue.css \
-		..\BBApp\resources\playback\stop.png \
-		..\BBApp\resources\playback\play.png \
-		..\BBApp\resources\playback\rewind.png \
-		..\BBApp\resources\playback\skip_previous.png \
-		..\BBApp\resources\playback\pause.png \
-		..\BBApp\resources\playback\time.png \
-		..\BBApp\resources\playback\record.png \
-		..\BBApp\resources\playback\skip_next.png \
-		..\BBApp\resources\icons\up-arrow-light.png \
-		..\BBApp\resources\icons\plus-light.png \
-		..\BBApp\resources\icons\collapse-down-light.png \
+		..\BBApp\resources\color_spectrogram.png \
+		..\BBApp\resources\style_sheet_light.css \
+		..\BBApp\resources\icons\down-arrow.png \
 		..\BBApp\resources\icons\check_select-light.png \
-		..\BBApp\resources\icons\collapse-right.png \
 		..\BBApp\resources\icons\icon_single.png \
-		..\BBApp\resources\icons\down-arrow-light.png \
-		..\BBApp\resources\icons\icon_continuous.png \
-		..\BBApp\resources\icons\minus.png \
-		..\BBApp\resources\icons\collapse-down.png \
-		..\BBApp\resources\icons\plus.png \
-		..\BBApp\resources\icons\minus-light.png \
-		..\BBApp\resources\icons\check_select.png \
 		..\BBApp\resources\icons\collapse-right-light.png \
-		..\BBApp\resources\icons\down-arrow.png
+		..\BBApp\resources\icons\plus-light.png \
+		..\BBApp\resources\icons\down-arrow-light.png \
+		..\BBApp\resources\icons\check_select.png \
+		..\BBApp\resources\icons\minus-light.png \
+		..\BBApp\resources\icons\up-arrow-light.png \
+		..\BBApp\resources\icons\plus.png \
+		..\BBApp\resources\icons\icon_continuous.png \
+		..\BBApp\resources\icons\collapse-down.png \
+		..\BBApp\resources\icons\collapse-right.png \
+		..\BBApp\resources\icons\minus.png \
+		..\BBApp\resources\icons\collapse-down-light.png \
+		..\BBApp\resources\playback\play.png \
+		..\BBApp\resources\playback\record.png \
+		..\BBApp\resources\playback\skip_previous.png \
+		..\BBApp\resources\playback\time.png \
+		..\BBApp\resources\playback\pause.png \
+		..\BBApp\resources\playback\skip_next.png \
+		..\BBApp\resources\playback\stop.png \
+		..\BBApp\resources\playback\rewind.png
 	C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\bin\rcc.exe -name bb_app ..\BBApp\resources\bb_app.qrc -o debug\qrc_bb_app.cpp
 
 compiler_moc_header_make_all: debug\moc_mainwindow.cpp debug\moc_entry_widgets.cpp debug\moc_dock_panel.cpp debug\moc_dock_page.cpp debug\moc_sweep_panel.cpp debug\moc_sweep_settings.cpp debug\moc_session.cpp debug\moc_sweep_central.cpp debug\moc_trace_view.cpp debug\moc_device.cpp debug\moc_trace_manager.cpp debug\moc_measure_panel.cpp debug\moc_audio_settings.cpp debug\moc_idle_view.cpp debug\moc_playback_toolbar.cpp debug\moc_audio_dialog.cpp debug\moc_status_bar.cpp debug\moc_progress_dialog.cpp debug\moc_preferences_dialog.cpp debug\moc_demod_settings.cpp debug\moc_demod_panel.cpp debug\moc_demod_central.cpp debug\moc_central_stack.cpp debug\moc_demod_iq_time_plot.cpp debug\moc_gl_sub_view.cpp debug\moc_demod_spectrum_plot.cpp debug\moc_demod_sweep_plot.cpp debug\moc_measuring_receiver_dialog.cpp debug\moc_harmonics_central.cpp debug\moc_harmonics_spectrum.cpp debug\moc_tg_central.cpp debug\moc_tg_trace_view.cpp debug\moc_tg_panel.cpp debug\moc_phase_noise_central.cpp debug\moc_phase_noise_plot.cpp debug\moc_if_output_dialog.cpp debug\moc_self_test_dialog.cpp debug\moc_rtl_sweep_panel.cpp debug\moc_rtl_sweep_settings.cpp
@@ -597,6 +597,7 @@ debug\moc_mainwindow.cpp: ..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QAction \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qaction.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qactiongroup.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QsharedPointer \
 		..\BBApp\src\model\session.h \
 		..\BBApp\src\model\device_bb60a.h \
 		..\BBApp\src\model\device.h \
@@ -7629,6 +7630,7 @@ debug\main.obj: ..\BBApp\src\main.cpp ..\BBApp\src\mainwindow.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QAction \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qaction.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qactiongroup.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QsharedPointer \
 		..\BBApp\src\model\session.h \
 		..\BBApp\src\model\device_bb60a.h \
 		..\BBApp\src\model\device.h \
@@ -7898,6 +7900,7 @@ debug\mainwindow.obj: ..\BBApp\src\mainwindow.cpp ..\BBApp\src\mainwindow.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QAction \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qaction.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qactiongroup.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QsharedPointer \
 		..\BBApp\src\model\session.h \
 		..\BBApp\src\model\device_bb60a.h \
 		..\BBApp\src\model\device.h \
@@ -8059,6 +8062,7 @@ debug\mainwindow.obj: ..\BBApp\src\mainwindow.cpp ..\BBApp\src\mainwindow.h \
 		..\BBApp\src\widgets\if_output_dialog.h \
 		..\BBApp\src\widgets\self_test_dialog.h \
 		..\BBApp\src\version.h \
+		..\BBApp\src\model\Device.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QSplitter \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qsplitter.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QTreeView \
@@ -8333,8 +8337,7 @@ debug\mainwindow.obj: ..\BBApp\src\mainwindow.cpp ..\BBApp\src\mainwindow.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QPair \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtPrintSupport\QPrinter \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtPrintSupport\qprintpreviewwidget.h \
-		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtPrintSupport\qtprintsupportversion.h \
-		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QsharedPointer
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtPrintSupport\qtprintsupportversion.h
 
 debug\bb_lib.obj: ..\BBApp\src\lib\bb_lib.cpp ..\BBApp\src\lib\bb_lib.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QDateTime \
@@ -9862,6 +9865,7 @@ debug\sweep_central.obj: ..\BBApp\src\views\sweep_central.cpp ..\BBApp\src\views
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qmainwindow.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QStatusBar \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qstatusbar.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QsharedPointer \
 		..\BBApp\src\widgets\measure_panel.h \
 		..\BBApp\src\widgets\dock_panel.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QDockWidget \
@@ -10127,6 +10131,7 @@ debug\trace_view.obj: ..\BBApp\src\views\trace_view.cpp ..\BBApp\src\views\trace
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QAction \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qaction.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qactiongroup.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QsharedPointer \
 		..\BBApp\src\widgets\measure_panel.h \
 		..\BBApp\src\widgets\dock_panel.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QDockWidget \
@@ -10590,6 +10595,7 @@ debug\device_bb60a.obj: ..\BBApp\src\model\device_bb60a.cpp ..\BBApp\src\model\d
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QAction \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qaction.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qactiongroup.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QsharedPointer \
 		..\BBApp\src\model\session.h \
 		..\BBApp\src\model\device_sa.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QEventLoop \
@@ -13916,6 +13922,7 @@ debug\device_sa.obj: ..\BBApp\src\model\device_sa.cpp ..\BBApp\src\model\device_
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QAction \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qaction.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qactiongroup.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QsharedPointer \
 		..\BBApp\src\model\session.h \
 		..\BBApp\src\model\device_bb60a.h \
 		..\BBApp\src\model\device_rtlsdr.h \
@@ -15249,6 +15256,7 @@ debug\tg_trace_view.obj: ..\BBApp\src\views\tg_trace_view.cpp ..\BBApp\src\views
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QAction \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qaction.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qactiongroup.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QsharedPointer \
 		..\BBApp\src\widgets\measure_panel.h \
 		..\BBApp\src\widgets\dock_panel.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QDockWidget \
@@ -16590,7 +16598,39 @@ debug\device_rtlsdr.obj: ..\BBApp\src\model\device_rtlsdr.cpp ..\BBApp\src\model
 		..\BBApp\src\model\demod_settings.h \
 		..\BBApp\src\model\audio_settings.h \
 		..\BBApp\src\model\trace.h \
-		..\BBApp\src\model\marker.h
+		..\BBApp\src\model\marker.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QMessageBox \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qmessagebox.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qdialog.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qwidget.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qwindowdefs.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qwindowdefs_win.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qmargins.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qrect.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qpaintdevice.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qpalette.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qbrush.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qmatrix.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qpolygon.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qregion.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qline.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qtransform.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qpainterpath.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qimage.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qpixmap.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qfont.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qfontmetrics.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qfontinfo.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qsizepolicy.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qcursor.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qkeysequence.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qevent.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qurl.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qurlquery.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qfile.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qfiledevice.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qvector2d.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qtouchdevice.h
 
 debug\rtl_sweep_panel.obj: ..\BBApp\src\widgets\rtl_sweep_panel.cpp ..\BBApp\src\widgets\rtl_sweep_panel.h \
 		..\BBApp\src\widgets\dock_panel.h \

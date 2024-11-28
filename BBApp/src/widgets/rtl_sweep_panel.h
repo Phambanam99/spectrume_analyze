@@ -6,7 +6,7 @@
 
 class RTL_SDR_Settings;
 class Session;
-
+class Device;
 class RtlSweepPanel : public DockPanel {
     Q_OBJECT
 
@@ -17,6 +17,7 @@ public:
     ~RtlSweepPanel();
 
 private:
+    QComboBox *deviceSelected;
     DockPage *frequency_page;
     FrequencyEntry *start;
     FrequencyEntry *stop;

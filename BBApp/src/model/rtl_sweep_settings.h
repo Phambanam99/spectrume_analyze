@@ -8,6 +8,7 @@
 #include "../lib/frequency.h"
 #include "../lib/amplitude.h"
 #include "../lib/time_type.h"
+#include "../model/device_rtlsdr.h"
 class RTL_SDR_Settings : public QObject {
     Q_OBJECT
 
@@ -23,7 +24,7 @@ public:
     virtual void LoadDefaults();
     bool Load(QSettings &s);
     bool Save(QSettings &s) const;
-
+    void setDevice(DeviceRtlSdr* myDevice){  device = myDevice;}
     Frequency Start() const { return start; }
     Frequency Stop() const { return stop; }
     Frequency Center() const { return center; }
@@ -47,7 +48,7 @@ protected:
     virtual void UpdateProgram();
 
 private:
-    rtlsdr_dev_t* device;  // RTL-SDR device handle
+    DeviceRtlSdr* device;  // RTL-SDR device handle
     Frequency start;
     Frequency stop;
     Frequency center;
@@ -82,6 +83,8 @@ public slots:
     void setSweepTime(Time new_sweep_time);
     void setDetector(int new_detector);
     void setRejection(bool image_reject);
+    void handleDeviceSelection(int index);
+
 };
 
 #endif // RTL_SWEEP_SETTINGS_H
