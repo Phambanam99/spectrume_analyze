@@ -1,0 +1,478 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\lib\amplitude.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\audio_dialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\audio_settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\bb_lib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\demod_central.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\demod_iq_time_plot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\demod_panel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\demod_settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\demod_spectrum_plot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\demod_sweep_plot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\device_bb60a.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\device_rtlsdr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\device_sa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\device_traits.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\dock_page.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\dock_panel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\entry_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\frequency.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\gl_sub_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\harmonics_central.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\harmonics_spectrum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\if_output_dialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\import_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\kiss_fft\kiss_fft.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\marker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\measure_panel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\measuring_receiver_dialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\persistence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\phase_noise_central.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\phase_noise_plot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\playback_toolbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\preferences.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\preferences_dialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\rtl_sweep_panel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\rtl_sweep_settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\self_test_dialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\session.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\status_bar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\sweep_central.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\sweep_panel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\sweep_settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\tg_central.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\widgets\tg_panel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\tg_trace_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\time_type.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\trace.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\trace_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\views\trace_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\lib\amplitude.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\widgets\audio_dialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\audio_settings.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\lib\bb_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\bb_lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\views\central_stack.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\model\color_prefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\views\demod_central.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\demod_iq_time_plot.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\widgets\demod_panel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\demod_settings.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\demod_spectrum_plot.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\demod_sweep_plot.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\device.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\model\device_bb60a.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\device_rtlsdr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\device_sa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\device_traits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\widgets\dock_page.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\widgets\dock_panel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\widgets\entry_widgets.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\lib\frequency.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\views\gl_sub_view.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\harmonics_central.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\harmonics_spectrum.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\idle_view.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\widgets\if_output_dialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\model\import_table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kiss_fft\kiss_fft.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\kiss_fft\kissfft.hh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\mainwindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\model\marker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\widgets\measure_panel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\widgets\measuring_receiver_dialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\model\persistence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\views\persistence_view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\views\phase_noise_central.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\phase_noise_plot.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\playback_toolbar.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\model\preferences.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\widgets\preferences_dialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\widgets\progress_dialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\lib\rtl-sdr_export.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\widgets\rtl_sweep_panel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\rtl_sweep_settings.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\lib\rtlsdr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\sa_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\sa_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\widgets\self_test_dialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\session.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\widgets\status_bar.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\sweep_central.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\widgets\sweep_panel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\sweep_settings.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\tg_central.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\widgets\tg_panel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\tg_trace_view.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\lib\threadsafe_queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\time_type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\trace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="src\model\trace_manager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\views\trace_view.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="src\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <QtRcc Include="resources\bb_app.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="resources\icons\check_select-light.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\check_select.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\collapse-down-light.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\collapse-down.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\collapse-right-light.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\collapse-right.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\color_spectrogram.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\down-arrow-light.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\down-arrow.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\icon_continuous.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\icon_single.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\minus-light.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\minus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\playback\pause.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\playback\play.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\plus-light.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\plus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\playback\record.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\playback\rewind.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\playback\skip_next.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\playback\skip_previous.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\playback\stop.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\style_sheet_blue.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\style_sheet_dark.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\style_sheet_light.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\playback\time.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icons\up-arrow-light.png">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="bb_app.rc" />
+  </ItemGroup>
+</Project>

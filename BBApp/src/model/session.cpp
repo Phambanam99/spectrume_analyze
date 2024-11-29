@@ -11,8 +11,7 @@ Session::Session()
     device_traits::set_device_type(device->GetDeviceType());
 
     sweep_settings = new SweepSettings();
-    rtl_sweep_settings = new RTL_SDR_Settings();
-    rtl_sweep_settings->setDevice(new DeviceRtlSdr(&prefs));
+    rtl_sweep_settings = new SweepSettings();
     trace_manager = new TraceManager();
     demod_settings = new DemodSettings();
     audio_settings = new AudioSettings();

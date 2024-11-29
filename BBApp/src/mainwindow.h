@@ -18,7 +18,7 @@
 #include "views/harmonics_central.h"
 #include "views/tg_central.h"
 #include "views/phase_noise_central.h"
-#include "widgets/rtl_sweep_panel.h"
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -50,7 +50,7 @@ private:
     // The one and only session instance
     //   all other Session pointers are copies
     Session *session;
-
+    Session *session1;
     QMenuBar *main_menu;
     QMenu *file_menu, *connect_menu;
     QMenu *preset_menu;
@@ -63,12 +63,16 @@ private:
     QMenu *help_menu;
 
     SweepPanel *sweep_panel;
-    RtlSweepPanel *rtl_sweep_panel;
+    SweepPanel *rtl_sweep_panel;
     MeasurePanel *measure_panel;
     DemodPanel *demodPanel;
     TgCtrlPanel *tgPanel;
 
     CentralStack *centralStack;
+    CentralStack *centralStack1;
+    CentralStack *centralStack2;
+    CentralStack *centralStack3;
+    CentralStack *centralStack4;
     SweepCentral *sweepCentral;
     DemodCentral *demodCentral;
     HarmonicsCentral *harmonicCentral;

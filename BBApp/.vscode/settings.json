@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "qmessagebox": "cpp",
+        "mutex": "cpp",
+        "qstackedwidget": "cpp",
+        "thread": "cpp",
+        "utility": "cpp"
+    }
+}

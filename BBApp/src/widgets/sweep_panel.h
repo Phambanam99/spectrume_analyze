@@ -4,7 +4,7 @@
 #include "dock_panel.h"
 #include "entry_widgets.h"
 #include "lib/bb_lib.h"
-
+#include "lib/rtlsdr.h"
 class SweepSettings;
 class Device;
 class Session;
@@ -16,17 +16,21 @@ class SweepPanel : public DockPanel {
 
 public:
     SweepPanel(const QString &title,
+                       QWidget *parent);
+    SweepPanel(const QString &title,
+               QWidget *parent,
+               Session *session); 
+               ~SweepPanel();
+    void init(const QString &title,
                QWidget *parent,
                Session *session);
-    ~SweepPanel();
-
+    SweepSettings *settings;
     void DeviceConnected(DeviceType type);
-
-private:
     DockPage *tg_page;
     DockPage *frequency_page, *amplitude_page;
     DockPage *bandwidth_page, *acquisition_page;
-
+private:
+   
     NumericEntry *tgSweepSize;
     CheckBoxEntry *tgHighDynamicRange;
     ComboEntry *tgSweepType;
@@ -57,6 +61,7 @@ private:
 
 public slots:
     void updatePanel(const SweepSettings *settings);
+
     void setMode(OperationalMode mode);
     void enableManualGainAtten(bool enable) {
         gain->setEnabled(enable);

@@ -411,7 +411,8 @@ void TraceView::Paint()
 //        glQColor(GetSession()->colors.text);
 //        DrawString(tr("Device Idle"), textFont,
 //                   QPoint(grat_ul.x(), grat_ul.y() + 2), LEFT_ALIGNED);
-        AddTextToRender("Device Idle", QPoint(grat_ul.x(), grat_ul.y() + 2),
+        QString nameDevice = GetSession() -> device -> GetDeviceString();
+        AddTextToRender(nameDevice, QPoint(grat_ul.x(), grat_ul.y() + 2),
                         LEFT_ALIGNED, textFont.Font(), GetSession()->colors.text);
         drawGratText = false;
     } else {

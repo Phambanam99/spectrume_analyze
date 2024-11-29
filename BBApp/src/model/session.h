@@ -9,7 +9,6 @@
 #include "audio_settings.h"
 #include "color_prefs.h"
 #include "preferences.h"
-#include "rtl_sweep_settings.h"
 #include <QList>              // Dùng QList của Qt
 #include <QSharedPointer>     // Dùng QSharedPointer để quản lý bộ nhớ
 const int MAX_TITLE_LEN = 127;
@@ -33,7 +32,7 @@ public:
     // Sweep/Real-time related
     SweepSettings *sweep_settings;
     //RTL sweep setting
-    RTL_SDR_Settings *rtl_sweep_settings;
+    SweepSettings *rtl_sweep_settings;
     TraceManager *trace_manager;
     // Demod related
     DemodSettings *demod_settings;

@@ -4,7 +4,7 @@
 #include "sa_api.h"
 #include "bb_api.h"
 #include "model/sweep_settings.h"
-
+#include "rtlsdr.h"
 #include <QtGlobal>
 
 // I/Q max bandwidth per decimation BB60C
@@ -70,6 +70,8 @@ double device_traits::min_frequency()
         return SA124_MIN_FREQ;
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return BB60_MIN_FREQ;
+    case DeviceTypeRtlSdr:
+        return 500.0e3;
     }
     return BB60_MIN_FREQ;
 }
@@ -85,6 +87,8 @@ double device_traits::min_iq_frequency()
         return 10.0e6;
     case DeviceTypeBB60C:
         return 20.0e6;
+    case DeviceTypeRtlSdr:
+        return 24.0e6;
     }
     return 20.0e6;
 }
@@ -96,6 +100,8 @@ double device_traits::best_start_frequency()
         return 100.0e3;
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return 11.0e6;
+    case DeviceTypeRtlSdr:
+        return 50.0e6;
     }
     return 11.0e6;
 }
@@ -109,6 +115,8 @@ double device_traits::max_frequency()
         return SA124_MAX_FREQ;
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return 6.0e9;
+    case DeviceTypeRtlSdr:
+        return 1.75e9;    
     }
     return 6.0e9;
 }
@@ -122,6 +130,8 @@ std::pair<double, double> device_traits::full_span_frequencies()
         return std::make_pair(100.0e3, 12.4e9);
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return std::make_pair(9.0e3, 6.0e9);
+    case DeviceTypeRtlSdr:
+        return std::make_pair(500.e3, 1.75e9); 
     }
     return std::make_pair(9.0e3, 6.0e9);
 }
@@ -289,7 +299,7 @@ int device_traits::default_decimation()
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return 6;
     }
-    return 6;
+    return 0;
 }
 
 int device_traits::max_atten()
@@ -300,7 +310,7 @@ int device_traits::max_atten()
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return 3;
     }
-    return 3;
+    return 1;
 }
 
 int device_traits::max_gain()
@@ -310,8 +320,10 @@ int device_traits::max_gain()
         return 2;
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return 3;
+    case DeviceTypeRtlSdr:
+        return 1;
     }
-    return 3;
+    return 2;
 }
 
 double device_traits::sample_rate()
@@ -321,6 +333,8 @@ double device_traits::sample_rate()
         return 486.111e3;
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return 40.0e6;
+    case DeviceTypeRtlSdr:
+        return 3.2e6;
     }
     return 40.0e6;
 }
@@ -343,6 +357,8 @@ int device_traits::mod_analysis_decimation_order()
         return 0;
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return 7;
+    case DeviceTypeRtlSdr:
+        return 0;
     }
     return 7;
 }

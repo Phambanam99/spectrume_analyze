@@ -6,7 +6,6 @@
 #include "widgets/measuring_receiver_dialog.h"
 #include "widgets/if_output_dialog.h"
 #include "widgets/self_test_dialog.h"
-#include "widgets/rtl_sweep_panel.h"
 #include "version.h"
 #include "model/Device.h"
 #include <QFile>
@@ -24,7 +23,6 @@ static const QString utilitiesSelfTestString = "Self Test";
 
 // Static status bar
 BBStatusBar *MainWindow::status_bar;
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       saveLayoutOnClose(true)
@@ -35,7 +33,8 @@ MainWindow::MainWindow(QWidget *parent)
     resize(r.width() - 20, r.height() - 80);
 
     session = new Session();
-
+    session1 = new Session();
+    qDebug() << session ->sweep_settings ;
     // Side widgets have priority over top/bottom widgets
     this->setDockNestingEnabled(true);
 
@@ -45,8 +44,14 @@ MainWindow::MainWindow(QWidget *parent)
     setTabPosition(Qt::RightDockWidgetArea, QTabWidget::East);
     setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::West);
 
-    sweep_panel = new SweepPanel(tr("Sweep Settings"), this, session);
+    sweep_panel = new SweepPanel(tr("Sweep Settings"), this,session);
     sweep_panel->setObjectName("SweepSettingsPanel");
+    rtl_sweep_panel = new SweepPanel(tr("RTL Sweep Settings"), this, session1);
+    rtl_sweep_panel->setObjectName("RtlSweepSettingsPanel");
+    rtl_sweep_panel -> RemovePage(rtl_sweep_panel -> tg_page);
+    rtl_sweep_panel -> RemovePage(rtl_sweep_panel -> amplitude_page);
+    rtl_sweep_panel -> RemovePage(rtl_sweep_panel -> bandwidth_page);
+    rtl_sweep_panel -> RemovePage(rtl_sweep_panel -> acquisition_page);
     connect(sweep_panel, SIGNAL(zeroSpanPressed()), this, SLOT(zeroSpanPressed()));
 
     measure_panel = new MeasurePanel(tr("Measurements"), this,
@@ -62,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent)
     addDockWidget(Qt::RightDockWidgetArea, sweep_panel);
     addDockWidget(Qt::LeftDockWidgetArea, measure_panel);
     addDockWidget(Qt::RightDockWidgetArea, demodPanel);
+    addDockWidget(Qt::RightDockWidgetArea, rtl_sweep_panel);
     addDockWidget(Qt::LeftDockWidgetArea, tgPanel);
     status_bar = new BBStatusBar();
     setStatusBar(status_bar);
@@ -102,13 +108,110 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Phần điều khiển RTL-SDR
 
-//    QWidget *emptyWidget = new QWidget(this);
-//    emptyWidget->setStyleSheet("background-color: lightgray;"); // Màu cho dễ nhìn
-    rtl_sweep_panel = new RtlSweepPanel(tr("RTL-SDR Config"), this, session);
-    rtl_sweep_panel -> setObjectName("RtlSweepSettingsPanel");
-    splitter->addWidget(rtl_sweep_panel);
-// Thiết lập tỉ lệ chiều cao giữa hai phần
-    splitter->setSizes(QList<int>() << 500 << 250); // 500px cho CentralStack, 250px cho phần dưới
+    // QWidget *emptyWidget = new QWidget(this);
+    // emptyWidget->setStyleSheet("background-color: lightgray;"); // Màu cho dễ nhìn
+    // splitter->addWidget(emptyWidget);
+    // rtl_sweep_panel = new RtlSweepPanel(tr("RTL-SDR Config"), this, session);
+    // rtl_sweep_panel -> setObjectName("RtlSweepSettingsPanel");
+    // splitter->addWidget(rtl_sweep_panel);
+
+
+
+    centralStack1 = new CentralStack(this);
+    // Thêm một widget trống vào phần dưới của splitter
+    sweepCentral = new SweepCentral(session, toolBar);
+    sweepCentral->EnableToolBarActions(false);
+    centralStack1->AddWidget(sweepCentral);
+
+    demodCentral = new DemodCentral(session, toolBar);
+    demodCentral->EnableToolBarActions(false);
+    centralStack1->AddWidget(demodCentral);
+
+    harmonicCentral = new HarmonicsCentral(session, toolBar);
+    centralStack1->AddWidget(harmonicCentral);
+
+    tgCentral = new TGCentral(session, toolBar);
+    centralStack1->AddWidget(tgCentral);
+
+    phaseNoiseCentral = new PhaseNoiseCentral(session, toolBar);
+    phaseNoiseCentral->EnableToolBarActions(false);
+    centralStack1->AddWidget(phaseNoiseCentral);
+   
+
+    centralStack2 = new CentralStack(this);
+    // Thêm một widget trống vào phần dưới của splitter
+    sweepCentral = new SweepCentral(session, toolBar);
+    sweepCentral->EnableToolBarActions(false);
+    centralStack2->AddWidget(sweepCentral);
+
+    demodCentral = new DemodCentral(session, toolBar);
+    demodCentral->EnableToolBarActions(false);
+    centralStack2->AddWidget(demodCentral);
+
+    harmonicCentral = new HarmonicsCentral(session, toolBar);
+    centralStack2->AddWidget(harmonicCentral);
+
+    tgCentral = new TGCentral(session, toolBar);
+    centralStack2->AddWidget(tgCentral);
+
+    phaseNoiseCentral = new PhaseNoiseCentral(session, toolBar);
+    phaseNoiseCentral->EnableToolBarActions(false);
+    centralStack2->AddWidget(phaseNoiseCentral);
+    splitter->addWidget(centralStack2);
+
+    centralStack3 = new CentralStack(this);
+    // Thêm một widget trống vào phần dưới của splitter
+    sweepCentral = new SweepCentral(session, toolBar);
+    sweepCentral->EnableToolBarActions(false);
+    centralStack3->AddWidget(sweepCentral);
+
+    demodCentral = new DemodCentral(session, toolBar);
+    demodCentral->EnableToolBarActions(false);
+    centralStack3->AddWidget(demodCentral);
+
+    harmonicCentral = new HarmonicsCentral(session, toolBar);
+    centralStack3->AddWidget(harmonicCentral);
+
+    tgCentral = new TGCentral(session, toolBar);
+    centralStack3->AddWidget(tgCentral);
+
+    phaseNoiseCentral = new PhaseNoiseCentral(session, toolBar);
+    phaseNoiseCentral->EnableToolBarActions(false);
+    centralStack3->AddWidget(phaseNoiseCentral);
+    splitter->addWidget(centralStack3);
+
+    centralStack4 = new CentralStack(this);
+    // Thêm một widget trống vào phần dưới của splitter
+    sweepCentral = new SweepCentral(session, toolBar);
+    sweepCentral->EnableToolBarActions(false);
+    centralStack4->AddWidget(sweepCentral);
+
+    demodCentral = new DemodCentral(session, toolBar);
+    demodCentral->EnableToolBarActions(false);
+    centralStack4->AddWidget(demodCentral);
+
+    harmonicCentral = new HarmonicsCentral(session, toolBar);
+    centralStack4->AddWidget(harmonicCentral);
+
+    tgCentral = new TGCentral(session, toolBar);
+    centralStack4->AddWidget(tgCentral);
+
+    phaseNoiseCentral = new PhaseNoiseCentral(session, toolBar);
+    phaseNoiseCentral->EnableToolBarActions(false);
+    centralStack4->AddWidget(phaseNoiseCentral);
+    splitter->addWidget(centralStack4);
+     
+// Tạo widget phải chứa QGridLayout
+    QWidget *RtlWidget = new QWidget;
+    QGridLayout *rightLayout = new QGridLayout;
+    rightLayout->addWidget(centralStack1, 0, 0);
+    rightLayout->addWidget(centralStack2, 0, 1);
+    rightLayout->addWidget(centralStack3, 1, 0);
+    rightLayout->addWidget(centralStack4, 1, 1);
+    RtlWidget->setLayout(rightLayout);
+    splitter->addWidget(RtlWidget);
+    // Thiết lập tỉ lệ chiều cao giữa hai phần
+    splitter->setSizes(QList<int>() << 250 << 500); // 500px cho CentralStack, 250px cho phần dưới
     splitter->setStretchFactor(0, 1); // Phần trên co giãn
     splitter->setStretchFactor(1, 0); // Phần dưới không co giãn
 
