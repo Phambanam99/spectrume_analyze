@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     resize(r.width() - 20, r.height() - 80);
 
     session = new Session();
-    session1 = new Session();
+    session1 = new Session(new DeviceRtlSdr(&session -> prefs));
     qDebug() << session ->sweep_settings ;
     // Side widgets have priority over top/bottom widgets
     this->setDockNestingEnabled(true);
@@ -630,7 +630,21 @@ void MainWindow::aboutToShowUtilitiesMenu()
         }
     }
 }
+void MainWindow::OpenDeviceRtl()
+{
+    QString openLabel = "Connecting Device RTL-SDR\nEstimated 6 seconds\n";
+    SHProgressDialog pd(openLabel, this);
+    pd.show();
 
+    // Device *device = new DeviceRtlSdr(&session1->prefs);
+    // // Replace the old device with the new one
+    // Device *tempDevice = session1->device;
+    // session1->device = device;
+    // delete tempDevice;
+    session1-> device -> OpenDevice();
+    deviceConnected(session1->device->IsOpen());
+    return;
+}
 void MainWindow::OpenDevice(QMap<QString, QVariant> devInfoMap)
 {
     QString openLabel;
@@ -646,7 +660,7 @@ void MainWindow::OpenDevice(QMap<QString, QVariant> devInfoMap)
     Device *device;
     if(devInfoMap["Series"].toInt() == saSeries) {
         device = new DeviceSA(&session->prefs);
-    } else {
+    } if (devInfoMap["Series"].toInt() == bbSeries) {
         device = new DeviceBB60A(&session->prefs);
     }
 
@@ -665,9 +679,7 @@ void MainWindow::OpenDevice(QMap<QString, QVariant> devInfoMap)
     if(t.joinable()) {
         t.join();
     }
-
     deviceConnected(session->device->IsOpen());
-
     return;
 }
 
@@ -755,8 +767,12 @@ void MainWindow::connectDeviceUponOpen()
             countBB += listDeviceInfoBB.size();
             OpenDevice(devInfo);
         } else {
-             countRtl += listDeviceInfoRtl.size();
-             qDebug() << "rtl " << countRtl;
+              countRtl += listDeviceInfoRtl.size();
+              qDebug() << "rtl " << countRtl;
+              DeviceRtlInfo item = listDeviceInfoRtl.at(0);
+              QMap<QString, QVariant> devInfo1;
+              devInfo1["SerialNumber"] = item.serialNumber;
+              OpenDeviceRtl();
         }
 
       QString numberDevices = QString("Signal Hound %1 \n RTL-SDR %2").arg(countBB).arg(countRtl);
@@ -847,6 +863,7 @@ void MainWindow::deviceConnected(bool success)
     QString device_string;
 
     if(success) {
+
         device_string = "Serial - " + session->device->SerialString() +
                 "    Firmware " + session->device->FirmwareString();
 

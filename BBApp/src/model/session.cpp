@@ -23,7 +23,23 @@ Session::Session()
     connect(trace_manager, SIGNAL(changeReferenceLevel(Amplitude)),
             sweep_settings, SLOT(setRefLevel(Amplitude)));
 }
+Session::Session(Device *my_device)
+{
+    device = my_device;
+    device_traits::set_device_type(device->GetDeviceType());
+    sweep_settings = new SweepSettings();
+    rtl_sweep_settings = new SweepSettings();
+    trace_manager = new TraceManager();
+    demod_settings = new DemodSettings();
+    audio_settings = new AudioSettings();
 
+    isInPlaybackMode = false;
+
+    connect(trace_manager, SIGNAL(changeCenterFrequency(Frequency)),
+            sweep_settings, SLOT(setCenter(Frequency)));
+    connect(trace_manager, SIGNAL(changeReferenceLevel(Amplitude)),
+            sweep_settings, SLOT(setRefLevel(Amplitude)));
+}
 Session::~Session()
 {
     delete sweep_settings;

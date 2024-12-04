@@ -33,10 +33,8 @@ QList<DeviceRtlInfo> Device::GetRtlList() const
 {
     QList<DeviceRtlInfo> deviceList;
     DeviceRtlInfo info;
-
     QString serialNumbers;
     int deviceCount;
-
     info.series = rtlSeries;
     deviceCount = rtlsdr_get_device_count();
     for (int i = 0; i < deviceCount; i++) {

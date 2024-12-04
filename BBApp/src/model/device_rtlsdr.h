@@ -10,7 +10,7 @@ class DeviceRtlSdr : public Device {
 public:
     DeviceRtlSdr(const Preferences *preferences);
     virtual ~DeviceRtlSdr();
-
+    DeviceRtlSdr();
     // Device control
     virtual bool OpenDevice();
     virtual bool OpenDeviceWithSerial(int serialToOpen);

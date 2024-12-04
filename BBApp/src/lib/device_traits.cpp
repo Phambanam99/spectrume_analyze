@@ -101,7 +101,7 @@ double device_traits::best_start_frequency()
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return 11.0e6;
     case DeviceTypeRtlSdr:
-        return 50.0e6;
+        return 500.0e6;
     }
     return 11.0e6;
 }

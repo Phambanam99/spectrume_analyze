@@ -19,7 +19,7 @@ class Session : public QObject {
 public:
     Session();
     ~Session();
-
+    Session(Device *device);
     void LoadDefaults();
     void LoadPreset(int p);
     void SavePreset(int p);

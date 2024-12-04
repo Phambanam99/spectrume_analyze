@@ -4,6 +4,12 @@
         "mutex": "cpp",
         "qstackedwidget": "cpp",
         "thread": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "qsharedpointer": "cpp",
+        "algorithm": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp",
+        "xiosbase": "cpp",
+        "xlocmes": "cpp"
     }
 }

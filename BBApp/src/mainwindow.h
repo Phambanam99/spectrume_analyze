@@ -41,7 +41,7 @@ private:
     OperationalMode ChangeMode(OperationalMode newMode);
 
     void RenamePreset(int p);
-
+    void OpenDeviceRtl();
     void OpenDevice(QMap<QString, QVariant> devInfoMap);
     void OpenDeviceInThread(QEventLoop *el, Device *device, int serialToOpen);
     void Preset();

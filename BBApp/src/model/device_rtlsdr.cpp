@@ -4,6 +4,9 @@
 DeviceRtlSdr::DeviceRtlSdr(const Preferences *preferences)
     : Device(preferences), device(nullptr), center_freq(100000000), sample_rate(2048000), gain(0), last_status(0) {
     device_type = DeviceTypeRtlSdr;
+    id = -1;
+    open = false;
+    serial_number = 0;
 }
 
 DeviceRtlSdr::~DeviceRtlSdr() {
@@ -14,9 +17,11 @@ bool DeviceRtlSdr::OpenDevice() {
     if (rtlsdr_open(&device, 0) != 0) {
         qDebug() << "Failed to open RTL-SDR device.";
         last_status = -1;
+        open = false;
         return false;
     }
     qDebug() << "RTL-SDR device opened.";
+    open = true;
     return true;
 }
 
@@ -26,11 +31,14 @@ bool DeviceRtlSdr::OpenDeviceWithSerial(int serialToOpen) {
         int deviceCount = rtlsdr_get_device_count();
         if (deviceCount == 0) {
             qDebug() << "No RTL-SDR devices found!";
+            open = false;
             return false;
+           
         }
 // 1 rtl-sdr
         if (rtlsdr_open(&dev, 0) < 0) {
             qDebug() << "Failed to open RTL-SDR device";
+            open = false;
             return false;
         }
 
@@ -38,6 +46,7 @@ bool DeviceRtlSdr::OpenDeviceWithSerial(int serialToOpen) {
          qDebug() << "Successfully opened RTL-SDR device " << device ;
         // If no matching device is found, show an error message
         QMessageBox::warning(nullptr, "RTL-SDR", "Successfully opened RTL-SDR device");
+        open = true;
         return true;
 }
 
@@ -46,8 +55,10 @@ bool DeviceRtlSdr::CloseDevice() {
         rtlsdr_close(device);
         device = nullptr;
         qDebug() << "RTL-SDR device closed.";
+        open = false;
         return true;
     }
+      open = true;
     return false;
 
 
