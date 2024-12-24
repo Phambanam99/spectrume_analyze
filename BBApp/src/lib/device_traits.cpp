@@ -49,6 +49,10 @@ void device_traits::set_device_type(DeviceType new_type)
 {
     type = new_type;
 }
+DeviceType device_traits::get_device_type()
+{
+    return type;
+}
 
 double device_traits::min_span()
 {

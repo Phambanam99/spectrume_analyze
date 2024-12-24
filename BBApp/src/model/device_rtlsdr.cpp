@@ -344,7 +344,18 @@ void DeviceRtlSdr::print_gains() const {
     }
     std::cerr << std::endl;
 }
+QStringList DeviceRtlSdr::qstring_gains() const {
 
+    auto gain_table = gains();
+
+    QStringList stringList;
+    for (unsigned int i = 0; i < gain_table.size(); i++) {
+        if (i != 0){
+         stringList.append(QString::number(gain_table[i]));
+        }
+    }
+     return stringList;
+}
 QString DeviceRtlSdr::GetDeviceString() const {
     return QString("RTL-SDR Device");
 }

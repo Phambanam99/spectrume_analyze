@@ -18,7 +18,7 @@ enum DeviceType {
 class device_traits {
 public:
     static void set_device_type(DeviceType new_type);
-
+    static DeviceType get_device_type();
     static double min_span();
     static double min_frequency();
     static double min_iq_frequency();

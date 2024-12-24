@@ -1,27 +1,30 @@
-#include "sweep_panel.h"
+#include "sweep_rtl_panel.h"
+
 
 #include "model/session.h"
 //#include "model/sweep_settings.h"
 //#include "model/device.h"
-SweepPanel::SweepPanel(const QString &title,
+SweepRtlPanel::SweepRtlPanel(const QString &title,
                        QWidget *parent) : DockPanel(title, parent){
 
 }
-SweepPanel::SweepPanel(const QString &title,
+SweepRtlPanel::SweepRtlPanel(const QString &title,
                        QWidget *parent,
                        Session *session)
     : DockPanel(title, parent),
       sessionPtr(session)
-{   
+{
     const SweepSettings *settings  = session -> sweep_settings;
-    const DeviceType deviceType = session -> device->GetDeviceType();
+
     tg_page = new DockPage("Tracking Generator");
     frequency_page = new DockPage(tr("Frequency"));
     amplitude_page = new DockPage(tr("Amplitude"));
     bandwidth_page = new DockPage(tr("Bandwidth"));
     acquisition_page = new DockPage(tr("Acquisition"));
+
     tgSweepSize = new NumericEntry("Sweep Size", 100, "pts");
     tgHighDynamicRange = new CheckBoxEntry("High Range");
+
     tgSweepType = new ComboEntry("Sweep Type");
     QStringList sweepType_sl;
     sweepType_sl << "Passive Device" << "Active Device";
@@ -31,37 +34,13 @@ SweepPanel::SweepPanel(const QString &title,
     connect(tgStoreThru, SIGNAL(leftPressed()), this, SLOT(storeThrough()));
     connect(tgStoreThru, SIGNAL(rightPressed()), this, SLOT(storeThroughPad()));
 
-
+//    QPushButton openDevice = new QPushButton("On/Off");
     center = new FreqShiftEntry(tr("Center"), 0.0);
     span = new FreqShiftEntry(tr("Span"), 0.0);
     start = new FrequencyEntry(tr("Start"), 0.0);
     stop = new FrequencyEntry(tr("Stop"), 0.0);
     step = new FrequencyEntry(tr("Step"), 0.0);
     full_zero_span = new DualButtonEntry(tr("Full Span"), tr("Zero Span"));
-    gainRtl = new ComboEntry(tr("Gains"));
-    if(deviceType == DeviceTypeRtlSdr){
-        QStringList gainsRtl;
-       gainsRtl << tr("0.0") << tr("0.9") << tr("1.4") << tr("2.7")
-               << tr("3.7") << tr("7.7") << tr("8.7") << tr("12.5")
-               << tr("14.4") << tr("15.7") << tr("16.6") << tr("19.7")
-               << tr("20.7") << tr("22.9") << tr("25.4") << tr("28.0")
-               << tr("29.7") << tr("32.8") << tr("33.8") << tr("36.4")
-               << tr("37.2") << tr("38.6") << tr("40.2") << tr("42.1")
-               << tr("43.4") << tr("43.9") << tr("44.5") << tr("48.0")
-               << tr("49.6");
-        gainRtl->setComboText(gainsRtl);
-        gainRtl->setEnabled(true);
-    }
-    qDebug() << "hereee";
-    sampleRateRtrl = new ComboEntry(tr("Sample Rate"));
-    if(deviceType == DeviceTypeRtlSdr){
-         QStringList sampleRatesTxt;
-           sampleRatesTxt << tr("250KHz") << tr("1.024MHz") << tr("1.536MHz") << tr("1.792MHz")
-                          << tr("1.92MHz")  << tr("2.048MHz") << tr("2.16MHz")
-                          << tr("2.4MHz") << tr("2.56MHz") <<  tr("2.88MHz") <<  tr("3.2MHz") ;
-        sampleRateRtrl->setComboText(sampleRatesTxt);
-        sampleRateRtrl->setEnabled(true);
-    }
 
     ref = new AmplitudeEntry(tr("Ref"), 0.0);
     div = new NumericEntry(tr("Div"), 1.0, tr("dB"));
@@ -111,20 +90,11 @@ SweepPanel::SweepPanel(const QString &title,
 
 
     frequency_page->AddWidget(center);
-
-    if(deviceType == DeviceTypeRtlSdr){
-      frequency_page->AddWidget(sampleRateRtrl);
-      frequency_page -> AddWidget(gainRtl);
-    }else {
-
-
-        frequency_page->AddWidget(span);
-        frequency_page->AddWidget(start);
-        frequency_page->AddWidget(stop);
-        frequency_page->AddWidget(step);
-        frequency_page->AddWidget(full_zero_span);
-}
-
+    frequency_page->AddWidget(span);
+    frequency_page->AddWidget(start);
+    frequency_page->AddWidget(stop);
+    frequency_page->AddWidget(step);
+    frequency_page->AddWidget(full_zero_span);
 
     amplitude_page->AddWidget(ref);
     amplitude_page->AddWidget(div);
@@ -142,16 +112,11 @@ SweepPanel::SweepPanel(const QString &title,
     acquisition_page->AddWidget(detector);
     acquisition_page->AddWidget(sweep_time);
 
-    if(DeviceTypeRtlSdr != deviceType){
-         AppendPage(tg_page);
-         AppendPage(amplitude_page);
-         AppendPage(bandwidth_page);
-         AppendPage(acquisition_page);
-
-    }
-
+    AppendPage(tg_page);
     AppendPage(frequency_page);
-
+    AppendPage(amplitude_page);
+    AppendPage(bandwidth_page);
+    AppendPage(acquisition_page);
 
     // Set panel and connect here
     updatePanel(settings);
@@ -219,13 +184,13 @@ SweepPanel::SweepPanel(const QString &title,
     connect(sweep_time, SIGNAL(timeChanged(Time)),
             settings, SLOT(setSweepTime(Time)));
 }
-SweepPanel::~SweepPanel()
+SweepRtlPanel::~SweepRtlPanel()
 {
     // Don't delete widgets on pages
     delete tg_page;
 }
-void SweepPanel::init(const QString &title, QWidget *parent, Session *session){
-    
+void SweepRtlPanel::init(const QString &title, QWidget *parent, Session *session){
+
     sessionPtr = session;
     tg_page = new DockPage("Tracking Generator");
     frequency_page = new DockPage(tr("Frequency"));
@@ -392,7 +357,7 @@ void SweepPanel::init(const QString &title, QWidget *parent, Session *session){
     connect(sweep_time, SIGNAL(timeChanged(Time)),
             settings, SLOT(setSweepTime(Time)));
 }
-void SweepPanel::DeviceConnected(DeviceType type)
+void SweepRtlPanel::DeviceConnected(DeviceType type)
 {
     native_rbw->Enable(type == DeviceTypeBB60A
                        || type == DeviceTypeBB60C);
@@ -408,7 +373,7 @@ void SweepPanel::DeviceConnected(DeviceType type)
     atten->setComboText(atten_sl);
 }
 
-void SweepPanel::updatePanel(const SweepSettings *settings)
+void SweepRtlPanel::updatePanel(const SweepSettings *settings)
 {
     tgSweepSize->SetValue(settings->tgSweepSize);
     tgHighDynamicRange->SetChecked(settings->tgHighRangeSweep);
@@ -438,7 +403,7 @@ void SweepPanel::updatePanel(const SweepSettings *settings)
     sweep_time->SetTime(settings->SweepTime());
 }
 
-void SweepPanel::setMode(OperationalMode mode)
+void SweepRtlPanel::setMode(OperationalMode mode)
 {
     bool pagesEnabled = true;
     if(mode == MODE_NETWORK_ANALYZER) {
@@ -452,12 +417,12 @@ void SweepPanel::setMode(OperationalMode mode)
     acquisition_page->SetPageEnabled(pagesEnabled);
 }
 
-void SweepPanel::storeThrough()
+void SweepRtlPanel::storeThrough()
 {
     sessionPtr->device->TgStoreThrough();
 }
 
-void SweepPanel::storeThroughPad()
+void SweepRtlPanel::storeThroughPad()
 {
     sessionPtr->device->TgStoreThroughPad();
 }

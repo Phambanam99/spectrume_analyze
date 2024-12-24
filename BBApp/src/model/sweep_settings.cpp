@@ -96,11 +96,19 @@ void SweepSettings::LoadDefaults()
     mode = MODE_SWEEPING;
 
     std::pair<double, double> freqs = device_traits::full_span_frequencies();
-    start = device_traits::best_start_frequency();
-    stop = device_traits::max_frequency();
+    if(device_traits::get_device_type() == DeviceTypeRtlSdr){
+        center = 100.0e6;
+        span = 3.2e6;
+        start = center - span/2;
+        stop = center + span/2;
+    } else {
+        start = device_traits::best_start_frequency();
+        stop = device_traits::max_frequency();
 
-    span = (stop - start);
-    center = (start + stop) / 2.0;
+        span = (stop - start);
+        center = (start + stop) / 2.0;
+    }
+
     step = 20.0e6;
 
     auto_rbw = true;
@@ -398,10 +406,7 @@ void SweepSettings::setSpan(Frequency f)
 
     center = (start + stop) / 2.0;
     span = stop - start;
-    if(device_traits::type == DeviceTypeRtlSdr){
-        span = 3200000;
 
-    }
     AutoBandwidthAdjust(false);
     UpdateProgram();
 }

@@ -56,4 +56,5 @@ Params::Params() {    int N = 512;
      talkless = false;  // default: verbose
      matrixMode = false;  // default: original rtl-power-fftw output format
      finalfreq = 0;
+
 }

@@ -1,5 +1,5 @@
-#ifndef SWEEP_PANEL_H
-#define SWEEP_PANEL_H
+#ifndef SWEEP_RTL_PANEL_H
+#define SWEEP_RTL_PANEL_H
 
 #include "dock_panel.h"
 #include "entry_widgets.h"
@@ -9,18 +9,18 @@ class SweepSettings;
 class Device;
 class Session;
 
-class SweepPanel : public DockPanel {
+class SweepRtlPanel : public DockPanel {
     Q_OBJECT
 
     Session *sessionPtr; // Does not own
 
 public:
-    SweepPanel(const QString &title,
+    SweepRtlPanel(const QString &title,
                        QWidget *parent);
-    SweepPanel(const QString &title,
+    SweepRtlPanel(const QString &title,
                QWidget *parent,
-               Session *session); 
-               ~SweepPanel();
+               Session *session);
+               ~SweepRtlPanel();
     void init(const QString &title,
                QWidget *parent,
                Session *session);
@@ -30,7 +30,7 @@ public:
     DockPage *frequency_page, *amplitude_page;
     DockPage *bandwidth_page, *acquisition_page;
 private:
-   
+
     NumericEntry *tgSweepSize;
     CheckBoxEntry *tgHighDynamicRange;
     ComboEntry *tgSweepType;
@@ -41,8 +41,6 @@ private:
     FrequencyEntry *start;
     FrequencyEntry *stop;
     FrequencyEntry *step;
-    ComboEntry *gainRtl;
-    ComboEntry *sampleRateRtrl;
     DualButtonEntry *full_zero_span;
 
     AmplitudeEntry *ref;
@@ -79,7 +77,7 @@ signals:
     void zeroSpanPressed();
 
 private:
-    DISALLOW_COPY_AND_ASSIGN(SweepPanel)
+    DISALLOW_COPY_AND_ASSIGN(SweepRtlPanel)
 };
 
-#endif // SWEEP_PANEL_H
+#endif // SWEEP_RTL_PANEL_H

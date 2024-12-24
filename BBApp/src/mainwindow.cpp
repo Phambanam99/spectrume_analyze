@@ -33,7 +33,9 @@ MainWindow::MainWindow(QWidget *parent)
     resize(r.width() - 20 , r.height() - 80 );
 
     session = new Session();
+
     session1 = new Session(new DeviceRtlSdr(&session -> prefs));
+
 //    qDebug() << session ->sweep_settings ;
     // Side widgets have priority over top/bottom widgets
     this->setDockNestingEnabled(true);
@@ -46,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     sweep_panel = new SweepPanel(tr("Sweep Settings"), this,session);
     sweep_panel->setObjectName("SweepSettingsPanel");
+     qDebug() << session1 -> device->GetDeviceType();
     rtl_sweep_panel = new SweepPanel(tr("RTL Sweep Settings"), this, session1);
     rtl_sweep_panel->setObjectName("RtlSweepSettingsPanel");
     rtl_sweep_panel -> RemovePage(rtl_sweep_panel -> tg_page);
