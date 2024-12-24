@@ -114,6 +114,7 @@ void TraceManager::UpdateTraces(Trace *trace)
     double peak_freq, peak_amp;
     Amplitude ref = trace->GetSettings()->RefLevel();
     trace->GetSignalPeak(&peak_freq, &peak_amp);
+
     if(!ref.IsLogScale()) {
         lastTraceAboveReference = (peak_amp > ref.Val());
     } else {

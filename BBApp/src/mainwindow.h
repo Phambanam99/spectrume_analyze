@@ -79,6 +79,12 @@ private:
     TGCentral *tgCentral;
     PhaseNoiseCentral *phaseNoiseCentral;
 
+    SweepCentral *sweepCentral1;
+    DemodCentral *demodCentral1;
+    HarmonicsCentral *harmonicCentral1;
+    TGCentral *tgCentral1;
+    PhaseNoiseCentral *phaseNoiseCentral1;
+
     static BBStatusBar *status_bar;
 
     // Used for opening/closing BB60
@@ -98,6 +104,7 @@ public slots:
 
 private slots:
     void deviceConnected(bool);
+    void deviceRtlConnected(bool);
 
     // Restore the default layout for control panels
     void restoreDefaultLayout();

@@ -12,10 +12,13 @@ TARGET = BBApp
 TEMPLATE = app
 
 SOURCES += src/main.cpp \
+    src/lib/acquisition.cpp \
+    src/lib/params.cpp \
     src/mainwindow.cpp \
     src/lib/bb_lib.cpp \
     src/lib/amplitude.cpp \
     src/lib/frequency.cpp \
+    src/model/datastore.cpp \
     src/widgets/entry_widgets.cpp \
     src/widgets/dock_panel.cpp \
     src/widgets/dock_page.cpp \
@@ -60,13 +63,18 @@ SOURCES += src/main.cpp \
     src/widgets/self_test_dialog.cpp \
     src/model/preferences.cpp \
     src/model/device_rtlsdr.cpp \
+    src/lib/metadata.cpp
 
 HEADERS += src/mainwindow.h \
+    src/lib/acquisition.h \
+    src/lib/exceptions.h \
     src/lib/frequency.h \
     src/lib/macros.h \
+    src/lib/params.h \
     src/lib/time_type.h \
     src/lib/bb_lib.h \
     src/lib/amplitude.h \
+    src/model/datastore.h \
     src/widgets/entry_widgets.h \
     src/widgets/dock_panel.h \
     src/widgets/dock_page.h \
@@ -123,6 +131,9 @@ HEADERS += src/mainwindow.h \
     src/lib/rtlsdr.h \
     src/lib/rtl-sdr_export.h \
     src/model/device_rtlsdr.h \
+    ../../../../../Downloads/Compressed/fftw-3.3.5-dll64/fftw3.h \
+    src/lib/fftw3.h \
+    src/lib/metadata.h
 
 OTHER_FILES += \
     style_sheet.css \
@@ -133,7 +144,11 @@ OTHER_FILES += \
 LIBS += \
     -Ldebug -lbb_api \
     -Ldebug -lsa_api \
-    -Ldebug -lrtlsdr
+    -Ldebug -lrtlsdr \
+    -Ldebug -llibfftw3-3 \
+    -Ldebug -llibfftw3l-3 \
+    -Ldebug -llibfftw3f-3 \
+
 
 INCLUDEPATH += src external_libraries
 

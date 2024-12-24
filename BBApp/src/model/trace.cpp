@@ -236,12 +236,14 @@ void Trace::GetPeakList(std::vector<int> &peak_index_list) const
 void Trace::Update(const Trace &other)
 {
     if(!_update) {
+
         return;
     }
 
     // Check if equal? if not, set equal
     if(_size != other.Length()) {
         Copy(other);
+
     }
 
     Q_ASSERT(other.UpdateStop() <= Length());

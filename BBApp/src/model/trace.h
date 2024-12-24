@@ -127,6 +127,13 @@ public:
     // Returns true if the last data retrieved finished the sweep
     // Only relevant on SA fast sweep
     bool IsFullSweep() const { return _updateStop == _size; }
+    void setMin(float *min){
+        _minBuf = min;
+    }
+    void setMax(float *max){
+        _maxBuf = max;
+    }
+
 
     void GetOccupiedBandwidth(OccupiedBandwidthInfo &info) const;
 

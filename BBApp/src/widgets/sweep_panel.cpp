@@ -33,6 +33,7 @@ SweepPanel::SweepPanel(const QString &title,
     connect(tgStoreThru, SIGNAL(leftPressed()), this, SLOT(storeThrough()));
     connect(tgStoreThru, SIGNAL(rightPressed()), this, SLOT(storeThroughPad()));
 
+//    QPushButton openDevice = new QPushButton("On/Off");
     center = new FreqShiftEntry(tr("Center"), 0.0);
     span = new FreqShiftEntry(tr("Span"), 0.0);
     start = new FrequencyEntry(tr("Start"), 0.0);
@@ -86,6 +87,7 @@ SweepPanel::SweepPanel(const QString &title,
     tg_page->AddWidget(tgHighDynamicRange);
     tg_page->AddWidget(tgStoreThru);
 
+
     frequency_page->AddWidget(center);
     frequency_page->AddWidget(span);
     frequency_page->AddWidget(start);
@@ -127,6 +129,7 @@ SweepPanel::SweepPanel(const QString &title,
             settings, SLOT(setTgHighRange(bool)));
     connect(tgSweepType, SIGNAL(comboIndexChanged(int)),
             settings, SLOT(setTgPassiveDevice(int)));
+
 
     connect(center, SIGNAL(freqViewChanged(Frequency)),
             settings, SLOT(setCenter(Frequency)));

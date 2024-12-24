@@ -30,11 +30,11 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle(tr("Spike: Signal Hound Spectrum Analyzer Software"));
     move(0, 0);
     const QRect r = QApplication::desktop()->screenGeometry();
-    resize(r.width() - 20, r.height() - 80);
+    resize(r.width() - 20 , r.height() - 80 );
 
     session = new Session();
     session1 = new Session(new DeviceRtlSdr(&session -> prefs));
-    qDebug() << session ->sweep_settings ;
+//    qDebug() << session ->sweep_settings ;
     // Side widgets have priority over top/bottom widgets
     this->setDockNestingEnabled(true);
 
@@ -119,23 +119,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     centralStack1 = new CentralStack(this);
     // Thêm một widget trống vào phần dưới của splitter
-    sweepCentral = new SweepCentral(session, toolBar);
-    sweepCentral->EnableToolBarActions(false);
-    centralStack1->AddWidget(sweepCentral);
-
-    demodCentral = new DemodCentral(session, toolBar);
+    sweepCentral1 = new SweepCentral(session1, toolBar);
+    sweepCentral1->EnableToolBarActions(false);
+    centralStack1->AddWidget(sweepCentral1);
+    qDebug() <<sweepCentral1;
+    demodCentral1 = new DemodCentral(session1, toolBar);
     demodCentral->EnableToolBarActions(false);
-    centralStack1->AddWidget(demodCentral);
+   // centralStack1->AddWidget(demodCentral1);
 
-    harmonicCentral = new HarmonicsCentral(session, toolBar);
-    centralStack1->AddWidget(harmonicCentral);
+    harmonicCentral1 = new HarmonicsCentral(session1, toolBar);
+   // centralStack1->AddWidget(harmonicCentral1);
 
-    tgCentral = new TGCentral(session, toolBar);
-    centralStack1->AddWidget(tgCentral);
+    tgCentral1 = new TGCentral(session1, toolBar);
+   // centralStack1->AddWidget(tgCentral1);
 
-    phaseNoiseCentral = new PhaseNoiseCentral(session, toolBar);
-    phaseNoiseCentral->EnableToolBarActions(false);
-    centralStack1->AddWidget(phaseNoiseCentral);
+    phaseNoiseCentral1 = new PhaseNoiseCentral(session1, toolBar);
+    phaseNoiseCentral1->EnableToolBarActions(false);
+    //centralStack1->AddWidget(phaseNoiseCentral1);
    
 
     centralStack2 = new CentralStack(this);
@@ -262,9 +262,7 @@ MainWindow::MainWindow(QWidget *parent)
     addToolBar(toolBar);
     RestoreState();
     toolBar->show();
-
     ChangeMode(MODE_SWEEPING);
-
     connectDeviceUponOpen();
 }
 
@@ -632,17 +630,28 @@ void MainWindow::aboutToShowUtilitiesMenu()
 }
 void MainWindow::OpenDeviceRtl()
 {
+    qDebug() << "MainWindow::OpenDeviceRtl()";
     QString openLabel = "Connecting Device RTL-SDR\nEstimated 6 seconds\n";
     SHProgressDialog pd(openLabel, this);
     pd.show();
 
-    // Device *device = new DeviceRtlSdr(&session1->prefs);
-    // // Replace the old device with the new one
-    // Device *tempDevice = session1->device;
-    // session1->device = device;
-    // delete tempDevice;
-    session1-> device -> OpenDevice();
-    deviceConnected(session1->device->IsOpen());
+     Device *device = new DeviceRtlSdr(&session1->prefs);
+     // Replace the old device with the new one
+     Device *tempDevice = session1->device;
+     session1->device = device;
+     delete tempDevice;
+    QEventLoop el;
+    std::thread t = std::thread(&MainWindow::OpenDeviceInThread,
+                                this,
+                                &el,
+                                device,
+                                0);
+    el.exec();
+    if(t.joinable()) {
+        t.join();
+    }
+
+  deviceRtlConnected(session1->device->IsOpen());
     return;
 }
 void MainWindow::OpenDevice(QMap<QString, QVariant> devInfoMap)
@@ -752,9 +761,18 @@ void MainWindow::PresetDeviceInThread(QEventLoop *el)
 //   report a number messages to the user.
 void MainWindow::connectDeviceUponOpen()
 {   auto listDeviceInfoBB = session->device->GetDeviceList();
-    auto listDeviceInfoRtl = session -> device -> GetRtlList();
+    auto listDeviceInfoRtl = session1 -> device -> GetRtlList();
     int countBB = 0;
-    int countRtl = 0;
+    auto list = listDeviceInfoBB;
+    // if(list.size() == 0) {
+    //       QMessageBox::warning(this, "Signal Hound", "No Device Found.");
+    //       return;
+    //   }
+    //   if(list.size() > 1) {
+    //       QMessageBox::warning(this, "Message", "More than one device found. "
+    //                            "Use the File->Connect menu to select which device to open.");
+    //       return;
+    //   }
         if(listDeviceInfoBB.size() > 0){
             DeviceConnectionInfo item = listDeviceInfoBB.at(0);
             QMap<QString, QVariant> devInfo;
@@ -766,17 +784,17 @@ void MainWindow::connectDeviceUponOpen()
             devInfo["SerialNumber"] = item.serialNumber;
             countBB += listDeviceInfoBB.size();
             OpenDevice(devInfo);
-        } else {
-              countRtl += listDeviceInfoRtl.size();
-              qDebug() << "rtl " << countRtl;
-              DeviceRtlInfo item = listDeviceInfoRtl.at(0);
-              QMap<QString, QVariant> devInfo1;
-              devInfo1["SerialNumber"] = item.serialNumber;
-              OpenDeviceRtl();
+        }
+        if(listDeviceInfoRtl.size() > 0){
+            DeviceRtlInfo item = listDeviceInfoRtl.at(0);
+            QMap<QString, QVariant> devInfo;
+            devInfo["Series"] = rtlSeries;
+            devInfo["SerialNumber"] = item.serialNumber;
+            qDebug() <<"Before open RTL";
+            OpenDeviceRtl();
         }
 
-      QString numberDevices = QString("Signal Hound %1 \n RTL-SDR %2").arg(countBB).arg(countRtl);
-      QMessageBox::warning(this, "Devices", numberDevices);
+
 }
 
 void MainWindow::connectDevice(QAction *a)
@@ -856,6 +874,28 @@ void MainWindow::forceDisconnectDevice()
 void MainWindow::presetDevice()
 {
     Preset();
+}
+void MainWindow::deviceRtlConnected(bool success){
+    QString device_string;
+    if(success){
+        device_string = session1 -> device -> GetDeviceString();
+        device_traits::set_device_type(session1->device->GetDeviceType());
+        session1->LoadDefaults();
+        connect(session1->device, SIGNAL(connectionIssues()),
+                this, SLOT(forceDisconnectDevice()));
+        rtl_sweep_panel->DeviceConnected(session1->device->GetDeviceType());
+        //ChangeMode(MODE_SWEEPING);
+        centralStack1->CurrentWidget()->EnableToolBarActions(false);
+
+        // Ensure the TG is connected before switching into network analysis
+        // If it is not, then go to previous mode
+
+
+        rtl_sweep_panel-> setMode(MODE_SWEEPING);
+        centralStack1 -> setCurrentWidget(sweepCentral1);
+        rtl_sweep_panel->show();
+        centralStack1->CurrentWidget()->changeMode(BB_SWEEPING);
+    }
 }
 
 void MainWindow::deviceConnected(bool success)
@@ -1052,6 +1092,8 @@ void MainWindow::modeChanged(QAction *a)
     centralStack->CurrentWidget()->changeMode(newMode);
 }
 
+
+
 OperationalMode MainWindow::ChangeMode(OperationalMode newMode)
 {
     centralStack->CurrentWidget()->EnableToolBarActions(false);
@@ -1070,7 +1112,7 @@ OperationalMode MainWindow::ChangeMode(OperationalMode newMode)
 
     sweep_panel->setMode(newMode);
     measure_panel->setMode(newMode);
-
+    qDebug()<<"oke";
     if(newMode == MODE_ZERO_SPAN) {
         centralStack->setCurrentWidget(demodCentral);
         sweep_panel->hide();

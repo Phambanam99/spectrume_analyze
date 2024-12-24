@@ -57,6 +57,9 @@ double device_traits::min_span()
         return 10.0;
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return BB_MIN_SPAN;
+
+    case DeviceTypeRtlSdr:
+        return 10.0;
     }
     return 100.0;
 }
@@ -71,7 +74,7 @@ double device_traits::min_frequency()
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return BB60_MIN_FREQ;
     case DeviceTypeRtlSdr:
-        return 500.0e3;
+        return 24.0e6;
     }
     return BB60_MIN_FREQ;
 }
@@ -101,7 +104,7 @@ double device_traits::best_start_frequency()
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return 11.0e6;
     case DeviceTypeRtlSdr:
-        return 500.0e6;
+        return 50.0e6;
     }
     return 11.0e6;
 }
@@ -131,7 +134,7 @@ std::pair<double, double> device_traits::full_span_frequencies()
     case DeviceTypeBB60A: case DeviceTypeBB60C:
         return std::make_pair(9.0e3, 6.0e9);
     case DeviceTypeRtlSdr:
-        return std::make_pair(500.e3, 1.75e9); 
+        return std::make_pair(99.0e6, 102.2e6);
     }
     return std::make_pair(9.0e3, 6.0e9);
 }

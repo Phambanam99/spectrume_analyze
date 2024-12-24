@@ -17,7 +17,7 @@ CXXFLAGS      = -nologo -Zm200 -Zc:wchar_t -O2 -MD -GR -W3 -w34100 -w34189 -EHsc
 INCPATH       = -I"..\BBApp\src" -I"external_libraries" -I"..\..\..\Qt\5.2.1\msvc2012_64_opengl\include" -I"..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtPrintSupport" -I"..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtOpenGL" -I"..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets" -I"..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui" -I"..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore" -I"release" -I"." -I"..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\win32-msvc2012"
 LINKER        = link
 LFLAGS        = /NOLOGO /DYNAMICBASE /NXCOMPAT /INCREMENTAL:NO /SUBSYSTEM:WINDOWS "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'"
-LIBS          = glu32.lib opengl32.lib gdi32.lib user32.lib qtmain.lib /LIBPATH:debug bb_api.lib sa_api.lib rtlsdr.lib /LIBPATH:C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib\Qt5PrintSupport.lib C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib\Qt5OpenGL.lib C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib\Qt5Widgets.lib C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib\Qt5Gui.lib C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib\Qt5Core.lib release\bb_app.res 
+LIBS          = glu32.lib opengl32.lib gdi32.lib user32.lib qtmain.lib /LIBPATH:debug bb_api.lib sa_api.lib rtlsdr.lib libfftw3-3.lib libfftw3l-3.lib libfftw3f-3.lib /LIBPATH:C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib\Qt5PrintSupport.lib C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib\Qt5OpenGL.lib C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib\Qt5Widgets.lib C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib\Qt5Gui.lib C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\lib\Qt5Core.lib release\bb_app.res 
 QMAKE         = C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\bin\qmake.exe
 IDC           = idc
 IDL           = midl
@@ -44,10 +44,13 @@ OBJECTS_DIR   = release
 ####### Files
 
 SOURCES       = ..\BBApp\src\main.cpp \
+		..\BBApp\src\lib\acquisition.cpp \
+		..\BBApp\src\lib\params.cpp \
 		..\BBApp\src\mainwindow.cpp \
 		..\BBApp\src\lib\bb_lib.cpp \
 		..\BBApp\src\lib\amplitude.cpp \
 		..\BBApp\src\lib\frequency.cpp \
+		..\BBApp\src\model\datastore.cpp \
 		..\BBApp\src\widgets\entry_widgets.cpp \
 		..\BBApp\src\widgets\dock_panel.cpp \
 		..\BBApp\src\widgets\dock_page.cpp \
@@ -91,8 +94,10 @@ SOURCES       = ..\BBApp\src\main.cpp \
 		..\BBApp\src\widgets\if_output_dialog.cpp \
 		..\BBApp\src\widgets\self_test_dialog.cpp \
 		..\BBApp\src\model\preferences.cpp \
-		..\BBApp\src\model\device_rtlsdr.cpp release\qrc_bb_app.cpp \
+		..\BBApp\src\model\device_rtlsdr.cpp \
+		..\BBApp\src\lib\metadata.cpp release\qrc_bb_app.cpp \
 		release\moc_mainwindow.cpp \
+		release\moc_acquisition.cpp \
 		release\moc_entry_widgets.cpp \
 		release\moc_dock_panel.cpp \
 		release\moc_dock_page.cpp \
@@ -130,10 +135,13 @@ SOURCES       = ..\BBApp\src\main.cpp \
 		release\moc_if_output_dialog.cpp \
 		release\moc_self_test_dialog.cpp
 OBJECTS       = release\main.obj \
+		release\acquisition.obj \
+		release\params.obj \
 		release\mainwindow.obj \
 		release\bb_lib.obj \
 		release\amplitude.obj \
 		release\frequency.obj \
+		release\datastore.obj \
 		release\entry_widgets.obj \
 		release\dock_panel.obj \
 		release\dock_page.obj \
@@ -178,8 +186,10 @@ OBJECTS       = release\main.obj \
 		release\self_test_dialog.obj \
 		release\preferences.obj \
 		release\device_rtlsdr.obj \
+		release\metadata.obj \
 		release\qrc_bb_app.obj \
 		release\moc_mainwindow.obj \
+		release\moc_acquisition.obj \
 		release\moc_entry_widgets.obj \
 		release\moc_dock_panel.obj \
 		release\moc_dock_page.obj \
@@ -247,6 +257,86 @@ DESTDIR_TARGET = release\BBApp.exe
 	$<
 <<
 
+{..\BBApp\src\widgets}.cpp{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\widgets}.cc{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\widgets}.cxx{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\widgets}.c{release\}.obj::
+	$(CC) -c $(CFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\views}.cpp{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\views}.cc{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\views}.cxx{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\views}.c{release\}.obj::
+	$(CC) -c $(CFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src}.cpp{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src}.cc{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src}.cxx{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src}.c{release\}.obj::
+	$(CC) -c $(CFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\lib}.cpp{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\lib}.cc{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\lib}.cxx{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
+{..\BBApp\src\lib}.c{release\}.obj::
+	$(CC) -c $(CFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+
 {..\BBApp\src\kiss_fft}.cpp{release\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
 	$<
@@ -287,46 +377,6 @@ DESTDIR_TARGET = release\BBApp.exe
 	$<
 <<
 
-{..\BBApp\src}.cpp{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src}.cc{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src}.cxx{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src}.c{release\}.obj::
-	$(CC) -c $(CFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\views}.cpp{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\views}.cc{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\views}.cxx{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\views}.c{release\}.obj::
-	$(CC) -c $(CFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
 {release}.cpp{release\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
 	$<
@@ -343,46 +393,6 @@ DESTDIR_TARGET = release\BBApp.exe
 <<
 
 {release}.c{release\}.obj::
-	$(CC) -c $(CFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\lib}.cpp{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\lib}.cc{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\lib}.cxx{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\lib}.c{release\}.obj::
-	$(CC) -c $(CFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\widgets}.cpp{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\widgets}.cc{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\widgets}.cxx{release\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
-	$<
-<<
-
-{..\BBApp\src\widgets}.c{release\}.obj::
 	$(CC) -c $(CFLAGS) $(INCPATH) -Forelease\ @<<
 	$<
 <<
@@ -410,8 +420,8 @@ dist:
 	$(ZIP) BBApp.zip $(SOURCES) $(DIST) ..\BBApp\BBApp.pro ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\spec_pre.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\common\shell-win32.conf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\qconfig.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_axbase.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_axbase_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_axcontainer.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_axcontainer_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_axserver.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_axserver_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_bluetooth.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_bluetooth_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_bootstrap_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_clucene_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_concurrent.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_concurrent_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_core.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_core_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_declarative.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_declarative_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_designer.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_designer_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_designercomponents_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_gui.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_gui_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_help.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_help_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_multimedia.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_multimedia_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_multimediawidgets.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_multimediawidgets_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_network.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_network_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_nfc.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_nfc_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_opengl.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_opengl_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_openglextensions.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_openglextensions_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_platformsupport_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_positioning.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_positioning_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_printsupport.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_printsupport_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_qml.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_qml_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_qmldevtools_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_qmltest.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_qmltest_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_quick.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_quick_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_quickparticles_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_script.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_script_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_scripttools.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_scripttools_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_sensors.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_sensors_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_serialport.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_serialport_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_sql.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_sql_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_svg.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_svg_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_testlib.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_testlib_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_uitools.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_uitools_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_webkit.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_webkit_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_webkitwidgets.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_webkitwidgets_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_widgets.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_widgets_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_winextras.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_winextras_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_xml.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_xml_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_xmlpatterns.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\modules\qt_lib_xmlpatterns_private.pri ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\qt_functions.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\qt_config.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\win32-msvc2012\qmake.conf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\spec_post.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\exclusive_builds.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\default_pre.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\win32\default_pre.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\resolve_config.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\exclusive_builds_post.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\default_post.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\build_pass.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\win32\rtti.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\warn_on.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\qt.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\resources.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\moc.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\win32\opengl.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\uic.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\win32\windows.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\testcase_targets.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\exceptions.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\yacc.prf ..\..\..\Qt\5.2.1\msvc2012_64_opengl\mkspecs\features\lex.prf ..\BBApp\BBApp.pro ..\BBApp\resources\bb_app.qrc C:/Users/namlk/Documents/SignalHound/Qt/5.2.1/msvc2012_64_opengl/lib/Qt5PrintSupport.prl C:/Users/namlk/Documents/SignalHound/Qt/5.2.1/msvc2012_64_opengl/lib/Qt5OpenGL.prl C:/Users/namlk/Documents/SignalHound/Qt/5.2.1/msvc2012_64_opengl/lib/Qt5Widgets.prl C:/Users/namlk/Documents/SignalHound/Qt/5.2.1/msvc2012_64_opengl/lib/Qt5Gui.prl C:/Users/namlk/Documents/SignalHound/Qt/5.2.1/msvc2012_64_opengl/lib/Qt5Core.prl  RESOURCES HEADERS SOURCES OBJECTIVE_SOURCES FORMS YACCSOURCES YACCSOURCES LEXSOURCES 
 
 clean: compiler_clean 
-	-$(DEL_FILE) release\main.obj release\mainwindow.obj release\bb_lib.obj release\amplitude.obj release\frequency.obj release\entry_widgets.obj release\dock_panel.obj release\dock_page.obj release\sweep_panel.obj release\sweep_settings.obj release\session.obj release\sweep_central.obj release\trace_view.obj release\trace.obj release\marker.obj release\device_bb60a.obj release\trace_manager.obj release\measure_panel.obj release\persistence.obj release\audio_settings.obj release\time_type.obj release\playback_toolbar.obj release\audio_dialog.obj release\status_bar.obj release\device.obj release\import_table.obj release\preferences_dialog.obj release\demod_settings.obj release\demod_central.obj release\demod_iq_time_plot.obj release\demod_panel.obj release\kiss_fft.obj release\demod_spectrum_plot.obj release\demod_sweep_plot.obj release\measuring_receiver_dialog.obj release\device_sa.obj release\device_traits.obj release\harmonics_central.obj release\gl_sub_view.obj release\harmonics_spectrum.obj release\tg_central.obj release\tg_trace_view.obj release\tg_panel.obj release\phase_noise_central.obj release\phase_noise_plot.obj release\if_output_dialog.obj release\self_test_dialog.obj release\preferences.obj release\device_rtlsdr.obj release\qrc_bb_app.obj release\moc_mainwindow.obj release\moc_entry_widgets.obj release\moc_dock_panel.obj release\moc_dock_page.obj release\moc_sweep_panel.obj release\moc_sweep_settings.obj release\moc_session.obj release\moc_sweep_central.obj release\moc_trace_view.obj release\moc_device.obj release\moc_trace_manager.obj release\moc_measure_panel.obj release\moc_audio_settings.obj release\moc_idle_view.obj release\moc_playback_toolbar.obj release\moc_audio_dialog.obj release\moc_status_bar.obj release\moc_progress_dialog.obj release\moc_preferences_dialog.obj release\moc_demod_settings.obj release\moc_demod_panel.obj release\moc_demod_central.obj release\moc_central_stack.obj release\moc_demod_iq_time_plot.obj release\moc_gl_sub_view.obj release\moc_demod_spectrum_plot.obj
-	-$(DEL_FILE) release\moc_demod_sweep_plot.obj release\moc_measuring_receiver_dialog.obj release\moc_harmonics_central.obj release\moc_harmonics_spectrum.obj release\moc_tg_central.obj release\moc_tg_trace_view.obj release\moc_tg_panel.obj release\moc_phase_noise_central.obj release\moc_phase_noise_plot.obj release\moc_if_output_dialog.obj release\moc_self_test_dialog.obj
+	-$(DEL_FILE) release\main.obj release\acquisition.obj release\params.obj release\mainwindow.obj release\bb_lib.obj release\amplitude.obj release\frequency.obj release\datastore.obj release\entry_widgets.obj release\dock_panel.obj release\dock_page.obj release\sweep_panel.obj release\sweep_settings.obj release\session.obj release\sweep_central.obj release\trace_view.obj release\trace.obj release\marker.obj release\device_bb60a.obj release\trace_manager.obj release\measure_panel.obj release\persistence.obj release\audio_settings.obj release\time_type.obj release\playback_toolbar.obj release\audio_dialog.obj release\status_bar.obj release\device.obj release\import_table.obj release\preferences_dialog.obj release\demod_settings.obj release\demod_central.obj release\demod_iq_time_plot.obj release\demod_panel.obj release\kiss_fft.obj release\demod_spectrum_plot.obj release\demod_sweep_plot.obj release\measuring_receiver_dialog.obj release\device_sa.obj release\device_traits.obj release\harmonics_central.obj release\gl_sub_view.obj release\harmonics_spectrum.obj release\tg_central.obj release\tg_trace_view.obj release\tg_panel.obj release\phase_noise_central.obj release\phase_noise_plot.obj release\if_output_dialog.obj release\self_test_dialog.obj release\preferences.obj release\device_rtlsdr.obj release\metadata.obj release\qrc_bb_app.obj release\moc_mainwindow.obj release\moc_acquisition.obj release\moc_entry_widgets.obj release\moc_dock_panel.obj release\moc_dock_page.obj release\moc_sweep_panel.obj release\moc_sweep_settings.obj release\moc_session.obj release\moc_sweep_central.obj release\moc_trace_view.obj release\moc_device.obj release\moc_trace_manager.obj release\moc_measure_panel.obj release\moc_audio_settings.obj release\moc_idle_view.obj release\moc_playback_toolbar.obj release\moc_audio_dialog.obj release\moc_status_bar.obj release\moc_progress_dialog.obj release\moc_preferences_dialog.obj release\moc_demod_settings.obj release\moc_demod_panel.obj release\moc_demod_central.obj release\moc_central_stack.obj
+	-$(DEL_FILE) release\moc_demod_iq_time_plot.obj release\moc_gl_sub_view.obj release\moc_demod_spectrum_plot.obj release\moc_demod_sweep_plot.obj release\moc_measuring_receiver_dialog.obj release\moc_harmonics_central.obj release\moc_harmonics_spectrum.obj release\moc_tg_central.obj release\moc_tg_trace_view.obj release\moc_tg_panel.obj release\moc_phase_noise_central.obj release\moc_phase_noise_plot.obj release\moc_if_output_dialog.obj release\moc_self_test_dialog.obj
 	-$(DEL_FILE) release\BBApp.exp release\BBApp.exe.embed.manifest
 	-$(DEL_FILE) release\bb_app.res
 
@@ -429,38 +439,38 @@ compiler_rcc_make_all: release\qrc_bb_app.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) release\qrc_bb_app.cpp
 release\qrc_bb_app.cpp: ..\BBApp\resources\bb_app.qrc \
-		..\BBApp\resources\style_sheet_blue.css \
+		..\BBApp\resources\style_sheet_dark.css \
 		..\BBApp\resources\color_spectrogram.png \
 		..\BBApp\resources\style_sheet_light.css \
-		..\BBApp\resources\style_sheet_dark.css \
-		..\BBApp\resources\icons\collapse-down.png \
-		..\BBApp\resources\icons\up-arrow-light.png \
-		..\BBApp\resources\icons\check_select-light.png \
-		..\BBApp\resources\icons\collapse-right.png \
-		..\BBApp\resources\icons\icon_single.png \
-		..\BBApp\resources\icons\down-arrow.png \
-		..\BBApp\resources\icons\check_select.png \
-		..\BBApp\resources\icons\icon_continuous.png \
-		..\BBApp\resources\icons\plus-light.png \
-		..\BBApp\resources\icons\collapse-down-light.png \
-		..\BBApp\resources\icons\minus-light.png \
-		..\BBApp\resources\icons\minus.png \
-		..\BBApp\resources\icons\plus.png \
-		..\BBApp\resources\icons\collapse-right-light.png \
-		..\BBApp\resources\icons\down-arrow-light.png \
-		..\BBApp\resources\playback\stop.png \
+		..\BBApp\resources\style_sheet_blue.css \
+		..\BBApp\resources\playback\record.png \
+		..\BBApp\resources\playback\time.png \
+		..\BBApp\resources\playback\pause.png \
 		..\BBApp\resources\playback\rewind.png \
+		..\BBApp\resources\playback\stop.png \
+		..\BBApp\resources\playback\skip_previous.png \
 		..\BBApp\resources\playback\play.png \
 		..\BBApp\resources\playback\skip_next.png \
-		..\BBApp\resources\playback\pause.png \
-		..\BBApp\resources\playback\record.png \
-		..\BBApp\resources\playback\skip_previous.png \
-		..\BBApp\resources\playback\time.png
+		..\BBApp\resources\icons\minus-light.png \
+		..\BBApp\resources\icons\check_select.png \
+		..\BBApp\resources\icons\collapse-right.png \
+		..\BBApp\resources\icons\plus.png \
+		..\BBApp\resources\icons\down-arrow-light.png \
+		..\BBApp\resources\icons\minus.png \
+		..\BBApp\resources\icons\check_select-light.png \
+		..\BBApp\resources\icons\collapse-down-light.png \
+		..\BBApp\resources\icons\icon_single.png \
+		..\BBApp\resources\icons\down-arrow.png \
+		..\BBApp\resources\icons\collapse-right-light.png \
+		..\BBApp\resources\icons\collapse-down.png \
+		..\BBApp\resources\icons\plus-light.png \
+		..\BBApp\resources\icons\up-arrow-light.png \
+		..\BBApp\resources\icons\icon_continuous.png
 	C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\bin\rcc.exe -name bb_app ..\BBApp\resources\bb_app.qrc -o release\qrc_bb_app.cpp
 
-compiler_moc_header_make_all: release\moc_mainwindow.cpp release\moc_entry_widgets.cpp release\moc_dock_panel.cpp release\moc_dock_page.cpp release\moc_sweep_panel.cpp release\moc_sweep_settings.cpp release\moc_session.cpp release\moc_sweep_central.cpp release\moc_trace_view.cpp release\moc_device.cpp release\moc_trace_manager.cpp release\moc_measure_panel.cpp release\moc_audio_settings.cpp release\moc_idle_view.cpp release\moc_playback_toolbar.cpp release\moc_audio_dialog.cpp release\moc_status_bar.cpp release\moc_progress_dialog.cpp release\moc_preferences_dialog.cpp release\moc_demod_settings.cpp release\moc_demod_panel.cpp release\moc_demod_central.cpp release\moc_central_stack.cpp release\moc_demod_iq_time_plot.cpp release\moc_gl_sub_view.cpp release\moc_demod_spectrum_plot.cpp release\moc_demod_sweep_plot.cpp release\moc_measuring_receiver_dialog.cpp release\moc_harmonics_central.cpp release\moc_harmonics_spectrum.cpp release\moc_tg_central.cpp release\moc_tg_trace_view.cpp release\moc_tg_panel.cpp release\moc_phase_noise_central.cpp release\moc_phase_noise_plot.cpp release\moc_if_output_dialog.cpp release\moc_self_test_dialog.cpp
+compiler_moc_header_make_all: release\moc_mainwindow.cpp release\moc_acquisition.cpp release\moc_entry_widgets.cpp release\moc_dock_panel.cpp release\moc_dock_page.cpp release\moc_sweep_panel.cpp release\moc_sweep_settings.cpp release\moc_session.cpp release\moc_sweep_central.cpp release\moc_trace_view.cpp release\moc_device.cpp release\moc_trace_manager.cpp release\moc_measure_panel.cpp release\moc_audio_settings.cpp release\moc_idle_view.cpp release\moc_playback_toolbar.cpp release\moc_audio_dialog.cpp release\moc_status_bar.cpp release\moc_progress_dialog.cpp release\moc_preferences_dialog.cpp release\moc_demod_settings.cpp release\moc_demod_panel.cpp release\moc_demod_central.cpp release\moc_central_stack.cpp release\moc_demod_iq_time_plot.cpp release\moc_gl_sub_view.cpp release\moc_demod_spectrum_plot.cpp release\moc_demod_sweep_plot.cpp release\moc_measuring_receiver_dialog.cpp release\moc_harmonics_central.cpp release\moc_harmonics_spectrum.cpp release\moc_tg_central.cpp release\moc_tg_trace_view.cpp release\moc_tg_panel.cpp release\moc_phase_noise_central.cpp release\moc_phase_noise_plot.cpp release\moc_if_output_dialog.cpp release\moc_self_test_dialog.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) release\moc_mainwindow.cpp release\moc_entry_widgets.cpp release\moc_dock_panel.cpp release\moc_dock_page.cpp release\moc_sweep_panel.cpp release\moc_sweep_settings.cpp release\moc_session.cpp release\moc_sweep_central.cpp release\moc_trace_view.cpp release\moc_device.cpp release\moc_trace_manager.cpp release\moc_measure_panel.cpp release\moc_audio_settings.cpp release\moc_idle_view.cpp release\moc_playback_toolbar.cpp release\moc_audio_dialog.cpp release\moc_status_bar.cpp release\moc_progress_dialog.cpp release\moc_preferences_dialog.cpp release\moc_demod_settings.cpp release\moc_demod_panel.cpp release\moc_demod_central.cpp release\moc_central_stack.cpp release\moc_demod_iq_time_plot.cpp release\moc_gl_sub_view.cpp release\moc_demod_spectrum_plot.cpp release\moc_demod_sweep_plot.cpp release\moc_measuring_receiver_dialog.cpp release\moc_harmonics_central.cpp release\moc_harmonics_spectrum.cpp release\moc_tg_central.cpp release\moc_tg_trace_view.cpp release\moc_tg_panel.cpp release\moc_phase_noise_central.cpp release\moc_phase_noise_plot.cpp release\moc_if_output_dialog.cpp release\moc_self_test_dialog.cpp
+	-$(DEL_FILE) release\moc_mainwindow.cpp release\moc_acquisition.cpp release\moc_entry_widgets.cpp release\moc_dock_panel.cpp release\moc_dock_page.cpp release\moc_sweep_panel.cpp release\moc_sweep_settings.cpp release\moc_session.cpp release\moc_sweep_central.cpp release\moc_trace_view.cpp release\moc_device.cpp release\moc_trace_manager.cpp release\moc_measure_panel.cpp release\moc_audio_settings.cpp release\moc_idle_view.cpp release\moc_playback_toolbar.cpp release\moc_audio_dialog.cpp release\moc_status_bar.cpp release\moc_progress_dialog.cpp release\moc_preferences_dialog.cpp release\moc_demod_settings.cpp release\moc_demod_panel.cpp release\moc_demod_central.cpp release\moc_central_stack.cpp release\moc_demod_iq_time_plot.cpp release\moc_gl_sub_view.cpp release\moc_demod_spectrum_plot.cpp release\moc_demod_sweep_plot.cpp release\moc_measuring_receiver_dialog.cpp release\moc_harmonics_central.cpp release\moc_harmonics_spectrum.cpp release\moc_tg_central.cpp release\moc_tg_trace_view.cpp release\moc_tg_panel.cpp release\moc_phase_noise_central.cpp release\moc_phase_noise_plot.cpp release\moc_if_output_dialog.cpp release\moc_self_test_dialog.cpp
 release\moc_mainwindow.cpp: ..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QMainWindow \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qmainwindow.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qwidget.h \
@@ -624,6 +634,7 @@ release\moc_mainwindow.cpp: ..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidge
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -729,6 +740,131 @@ release\moc_mainwindow.cpp: ..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidge
 		..\BBApp\src\views\phase_noise_plot.h \
 		..\BBApp\src\mainwindow.h
 	C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -D_WIN64 $(INCPATH) ..\BBApp\src\mainwindow.h -o release\moc_mainwindow.cpp
+
+release\moc_acquisition.cpp: ..\BBApp\src\lib\params.h \
+		..\BBApp\src\lib\exceptions.h \
+		..\BBApp\src\model\datastore.h \
+		..\BBApp\src\lib\fftw3.h \
+		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\model\device.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QObject \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qobject.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qobjectdefs.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qnamespace.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qglobal.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qconfig.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qfeatures.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsystemdetection.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qprocessordetection.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qcompilerdetection.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qglobalstatic.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qbasicatomic.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_bootstrap.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qgenericatomic.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_msvc.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_integrity.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qoldbasicatomic.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_vxworks.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_power.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_alpha.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_armv7.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_armv6.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_armv5.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_bfin.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_ia64.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_mips.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_s390.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_sh4a.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_sparc.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_x86.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_cxx11.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_gcc.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_unix.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qmutex.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qlogging.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qflags.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qtypeinfo.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qtypetraits.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsysinfo.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qobjectdefs_impl.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qstring.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qchar.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qbytearray.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qrefcount.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qarraydata.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qstringbuilder.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qlist.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qalgorithms.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qiterator.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qcoreevent.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qscopedpointer.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qmetatype.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qvarlengtharray.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qcontainerfwd.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qisenum.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qobject_impl.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QSize \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsize.h \
+		..\BBApp\src\lib\bb_lib.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QDateTime \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qdatetime.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsharedpointer.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qshareddata.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsharedpointer_impl.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qhash.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qpair.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QWaitCondition \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qwaitcondition.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QDebug \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qdebug.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qmap.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qtextstream.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qiodevice.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qlocale.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qvariant.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qstringlist.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qdatastream.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qregexp.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qstringmatcher.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qvector.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qpoint.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qset.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qcontiguouscache.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\QOpenGLFunctions \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopenglfunctions.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopengl.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qt_windows.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopengles2ext.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopenglext.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopenglcontext.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QScopedPointer \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\QSurfaceFormat \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qsurfaceformat.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopenglversionfunctions.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\QColor \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qcolor.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qrgb.h \
+		..\BBApp\src\lib\frequency.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QString \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QVariant \
+		..\BBApp\src\lib\amplitude.h \
+		..\BBApp\src\lib\macros.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QSettings \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsettings.h \
+		..\BBApp\src\lib\time_type.h \
+		..\BBApp\src\kiss_fft\kissfft.hh \
+		..\BBApp\src\lib\device_traits.h \
+		..\BBApp\src\lib\bb_api.h \
+		..\BBApp\src\lib\rtlsdr.h \
+		..\BBApp\src\lib\rtl-sdr_export.h \
+		..\BBApp\src\model\sweep_settings.h \
+		..\BBApp\src\model\demod_settings.h \
+		..\BBApp\src\model\audio_settings.h \
+		..\BBApp\src\model\trace.h \
+		..\BBApp\src\model\marker.h \
+		..\BBApp\src\lib\acquisition.h
+	C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -D_WIN64 $(INCPATH) ..\BBApp\src\lib\acquisition.h -o release\moc_acquisition.cpp
 
 release\moc_entry_widgets.cpp: ..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QWidget \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qwidget.h \
@@ -1307,6 +1443,8 @@ release\moc_sweep_panel.cpp: ..\BBApp\src\widgets\dock_panel.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\QColor \
 		..\BBApp\src\kiss_fft\kissfft.hh \
 		..\BBApp\src\lib\device_traits.h \
+		..\BBApp\src\lib\rtlsdr.h \
+		..\BBApp\src\lib\rtl-sdr_export.h \
 		..\BBApp\src\widgets\sweep_panel.h
 	C:\Users\namlk\Documents\SignalHound\Qt\5.2.1\msvc2012_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1700 -D_WIN32 -D_WIN64 $(INCPATH) ..\BBApp\src\widgets\sweep_panel.h -o release\moc_sweep_panel.cpp
 
@@ -1542,6 +1680,7 @@ release\moc_session.cpp: ..\BBApp\src\model\device_bb60a.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -1789,6 +1928,7 @@ release\moc_sweep_central.cpp: ..\BBApp\src\views\central_stack.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -2016,6 +2156,7 @@ release\moc_trace_view.cpp: ..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\Q
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QEventLoop \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\BBApp\src\lib\threadsafe_queue.h \
 		..\BBApp\src\model\persistence.h \
@@ -2919,6 +3060,7 @@ release\moc_playback_toolbar.cpp: ..\BBApp\src\lib\bb_lib.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -3582,6 +3724,7 @@ release\moc_preferences_dialog.cpp: ..\..\..\Qt\5.2.1\msvc2012_64_opengl\include
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -4088,6 +4231,7 @@ release\moc_demod_central.cpp: ..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWi
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -4440,6 +4584,7 @@ release\moc_demod_iq_time_plot.cpp: ..\BBApp\src\views\gl_sub_view.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -4656,6 +4801,7 @@ release\moc_gl_sub_view.cpp: ..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -4873,6 +5019,7 @@ release\moc_demod_spectrum_plot.cpp: ..\BBApp\src\views\gl_sub_view.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -5090,6 +5237,7 @@ release\moc_demod_sweep_plot.cpp: ..\BBApp\src\views\gl_sub_view.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -5506,6 +5654,7 @@ release\moc_harmonics_central.cpp: ..\BBApp\src\views\central_stack.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -5721,6 +5870,7 @@ release\moc_harmonics_spectrum.cpp: ..\BBApp\src\views\gl_sub_view.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -5950,6 +6100,7 @@ release\moc_tg_central.cpp: ..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\Q
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -6165,6 +6316,7 @@ release\moc_tg_trace_view.cpp: ..\BBApp\src\views\gl_sub_view.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -6575,6 +6727,7 @@ release\moc_phase_noise_central.cpp: ..\BBApp\src\views\central_stack.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -6790,6 +6943,7 @@ release\moc_phase_noise_plot.cpp: ..\BBApp\src\views\gl_sub_view.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -7391,6 +7545,7 @@ release\main.obj: ..\BBApp\src\main.cpp ..\BBApp\src\mainwindow.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -7494,6 +7649,134 @@ release\main.obj: ..\BBApp\src\main.cpp ..\BBApp\src\mainwindow.h \
 		..\BBApp\src\views\tg_trace_view.h \
 		..\BBApp\src\views\phase_noise_central.h \
 		..\BBApp\src\views\phase_noise_plot.h
+
+release\acquisition.obj: ..\BBApp\src\lib\acquisition.cpp ..\BBApp\src\lib\acquisition.h \
+		..\BBApp\src\lib\params.h \
+		..\BBApp\src\lib\exceptions.h \
+		..\BBApp\src\model\datastore.h \
+		..\BBApp\src\lib\fftw3.h \
+		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\model\device.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QObject \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qobject.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qobjectdefs.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qnamespace.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qglobal.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qconfig.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qfeatures.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsystemdetection.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qprocessordetection.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qcompilerdetection.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qglobalstatic.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qbasicatomic.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_bootstrap.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qgenericatomic.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_msvc.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_integrity.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qoldbasicatomic.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_vxworks.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_power.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_alpha.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_armv7.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_armv6.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_armv5.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_bfin.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_ia64.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_mips.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_s390.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_sh4a.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_sparc.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_x86.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_cxx11.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_gcc.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qatomic_unix.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qmutex.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qlogging.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qflags.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qtypeinfo.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qtypetraits.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsysinfo.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qobjectdefs_impl.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qstring.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qchar.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qbytearray.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qrefcount.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qarraydata.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qstringbuilder.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qlist.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qalgorithms.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qiterator.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qcoreevent.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qscopedpointer.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qmetatype.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qvarlengtharray.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qcontainerfwd.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qisenum.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qobject_impl.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QSize \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsize.h \
+		..\BBApp\src\lib\bb_lib.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QDateTime \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qdatetime.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsharedpointer.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qshareddata.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsharedpointer_impl.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qhash.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qpair.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QWaitCondition \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qwaitcondition.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QDebug \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qdebug.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qmap.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qtextstream.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qiodevice.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qlocale.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qvariant.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qstringlist.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qdatastream.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qregexp.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qstringmatcher.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qvector.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qpoint.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qset.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qcontiguouscache.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\QOpenGLFunctions \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopenglfunctions.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopengl.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qt_windows.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopengles2ext.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopenglext.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopenglcontext.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QScopedPointer \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\QSurfaceFormat \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qsurfaceformat.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qopenglversionfunctions.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\QColor \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qcolor.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qrgb.h \
+		..\BBApp\src\lib\frequency.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QString \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QVariant \
+		..\BBApp\src\lib\amplitude.h \
+		..\BBApp\src\lib\macros.h \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QSettings \
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qsettings.h \
+		..\BBApp\src\lib\time_type.h \
+		..\BBApp\src\kiss_fft\kissfft.hh \
+		..\BBApp\src\lib\device_traits.h \
+		..\BBApp\src\lib\bb_api.h \
+		..\BBApp\src\lib\rtlsdr.h \
+		..\BBApp\src\lib\rtl-sdr_export.h \
+		..\BBApp\src\model\sweep_settings.h \
+		..\BBApp\src\model\demod_settings.h \
+		..\BBApp\src\model\audio_settings.h \
+		..\BBApp\src\model\trace.h \
+		..\BBApp\src\model\marker.h \
+		..\BBApp\src\lib\metadata.h
+
+release\params.obj: ..\BBApp\src\lib\params.cpp ..\BBApp\src\lib\params.h \
+		..\BBApp\src\lib\exceptions.h
 
 release\mainwindow.obj: ..\BBApp\src\mainwindow.cpp ..\BBApp\src\mainwindow.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QMainWindow \
@@ -7659,6 +7942,7 @@ release\mainwindow.obj: ..\BBApp\src\mainwindow.cpp ..\BBApp\src\mainwindow.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -8364,6 +8648,11 @@ release\frequency.obj: ..\BBApp\src\lib\frequency.cpp ..\BBApp\src\lib\frequency
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qregexp.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qstringmatcher.h
 
+release\datastore.obj: ..\BBApp\src\model\datastore.cpp ..\BBApp\src\model\datastore.h \
+		..\BBApp\src\lib\fftw3.h \
+		..\BBApp\src\lib\params.h \
+		..\BBApp\src\lib\exceptions.h
+
 release\entry_widgets.obj: ..\BBApp\src\widgets\entry_widgets.cpp ..\BBApp\src\lib\bb_lib.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QDateTime \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qdatetime.h \
@@ -8976,13 +9265,13 @@ release\sweep_panel.obj: ..\BBApp\src\widgets\sweep_panel.cpp ..\BBApp\src\widge
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\QColor \
 		..\BBApp\src\kiss_fft\kissfft.hh \
 		..\BBApp\src\lib\device_traits.h \
+		..\BBApp\src\lib\rtlsdr.h \
+		..\BBApp\src\lib\rtl-sdr_export.h \
 		..\BBApp\src\model\session.h \
 		..\BBApp\src\model\device_bb60a.h \
 		..\BBApp\src\model\device.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QSize \
 		..\BBApp\src\lib\bb_api.h \
-		..\BBApp\src\lib\rtlsdr.h \
-		..\BBApp\src\lib\rtl-sdr_export.h \
 		..\BBApp\src\model\sweep_settings.h \
 		..\BBApp\src\model\demod_settings.h \
 		..\BBApp\src\model\audio_settings.h \
@@ -8993,6 +9282,7 @@ release\sweep_panel.obj: ..\BBApp\src\widgets\sweep_panel.cpp ..\BBApp\src\widge
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -9243,6 +9533,7 @@ release\session.obj: ..\BBApp\src\model\session.cpp ..\BBApp\src\model\session.h
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -9491,6 +9782,7 @@ release\sweep_central.obj: ..\BBApp\src\views\sweep_central.cpp ..\BBApp\src\vie
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -9785,6 +10077,7 @@ release\trace_view.obj: ..\BBApp\src\views\trace_view.cpp ..\BBApp\src\views\tra
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QEventLoop \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\BBApp\src\lib\threadsafe_queue.h \
 		..\BBApp\src\model\persistence.h \
@@ -10306,6 +10599,7 @@ release\device_bb60a.obj: ..\BBApp\src\model\device_bb60a.cpp ..\BBApp\src\model
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -11248,6 +11542,7 @@ release\playback_toolbar.obj: ..\BBApp\src\model\playback_toolbar.cpp ..\BBApp\s
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -12042,6 +12337,7 @@ release\preferences_dialog.obj: ..\BBApp\src\widgets\preferences_dialog.cpp ..\B
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -12363,6 +12659,7 @@ release\demod_central.obj: ..\BBApp\src\views\demod_central.cpp ..\BBApp\src\vie
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -12597,6 +12894,7 @@ release\demod_iq_time_plot.obj: ..\BBApp\src\views\demod_iq_time_plot.cpp ..\BBA
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -12998,6 +13296,7 @@ release\demod_spectrum_plot.obj: ..\BBApp\src\views\demod_spectrum_plot.cpp ..\B
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -13214,6 +13513,7 @@ release\demod_sweep_plot.obj: ..\BBApp\src\views\demod_sweep_plot.cpp ..\BBApp\s
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -13622,6 +13922,7 @@ release\device_sa.obj: ..\BBApp\src\model\device_sa.cpp ..\BBApp\src\model\devic
 		..\BBApp\src\model\session.h \
 		..\BBApp\src\model\device_bb60a.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -14018,6 +14319,7 @@ release\harmonics_central.obj: ..\BBApp\src\views\harmonics_central.cpp ..\BBApp
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -14231,6 +14533,7 @@ release\gl_sub_view.obj: ..\BBApp\src\views\gl_sub_view.cpp ..\BBApp\src\views\g
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -14447,6 +14750,7 @@ release\harmonics_spectrum.obj: ..\BBApp\src\views\harmonics_spectrum.cpp ..\BBA
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -14675,6 +14979,7 @@ release\tg_central.obj: ..\BBApp\src\views\tg_central.cpp ..\BBApp\src\views\tg_
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -14889,6 +15194,7 @@ release\tg_trace_view.obj: ..\BBApp\src\views\tg_trace_view.cpp ..\BBApp\src\vie
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -15190,6 +15496,7 @@ release\tg_panel.obj: ..\BBApp\src\widgets\tg_panel.cpp ..\BBApp\src\widgets\tg_
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -15388,6 +15695,7 @@ release\phase_noise_central.obj: ..\BBApp\src\views\phase_noise_central.cpp ..\B
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -15602,6 +15910,7 @@ release\phase_noise_plot.obj: ..\BBApp\src\views\phase_noise_plot.cpp ..\BBApp\s
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qeventloop.h \
 		..\BBApp\src\lib\sa_api.h \
 		..\BBApp\src\model\device_rtlsdr.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\BBApp\src\model\trace_manager.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\QMutex \
 		..\BBApp\src\lib\threadsafe_queue.h \
@@ -16286,6 +16595,7 @@ release\device_rtlsdr.obj: ..\BBApp\src\model\device_rtlsdr.cpp ..\BBApp\src\mod
 		..\BBApp\src\model\audio_settings.h \
 		..\BBApp\src\model\trace.h \
 		..\BBApp\src\model\marker.h \
+		..\BBApp\src\lib\fftw3.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\QMessageBox \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qmessagebox.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtWidgets\qdialog.h \
@@ -16317,11 +16627,19 @@ release\device_rtlsdr.obj: ..\BBApp\src\model\device_rtlsdr.cpp ..\BBApp\src\mod
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qfile.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtCore\qfiledevice.h \
 		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qvector2d.h \
-		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qtouchdevice.h
+		..\..\..\Qt\5.2.1\msvc2012_64_opengl\include\QtGui\qtouchdevice.h \
+		..\BBApp\src\lib\exceptions.h \
+		..\BBApp\src\lib\acquisition.h \
+		..\BBApp\src\lib\params.h \
+		..\BBApp\src\model\datastore.h
+
+release\metadata.obj: ..\BBApp\src\lib\metadata.cpp ..\BBApp\src\lib\metadata.h
 
 release\qrc_bb_app.obj: release\qrc_bb_app.cpp 
 
 release\moc_mainwindow.obj: release\moc_mainwindow.cpp 
+
+release\moc_acquisition.obj: release\moc_acquisition.cpp 
 
 release\moc_entry_widgets.obj: release\moc_entry_widgets.cpp 
 

@@ -60,10 +60,12 @@ bool DeviceBB60A::OpenDeviceWithSerial(int serialToOpen)
         lastStatus = bbNoError;
         return true;
     }
-
-    STATUS_CHECK(bbOpenDeviceBySerialNumber(&id, serialToOpen));
+   bbStatus status = bbOpenDeviceBySerialNumber(&id, 23263672);
+    qDebug() << status;
+    STATUS_CHECK(status);
 
     bbGetSerialNumber(id, (unsigned int*)(&serial_number));
+
     serial_string.sprintf("%d", serial_number);
     int fv;
     bbGetFirmwareVersion(id, &fv);
@@ -148,7 +150,7 @@ bool DeviceBB60A::Reconfigure(const SweepSettings *s, Trace *t)
     int detector = (s->Detector() == BB_AVERAGE) ?
                 BB_AVERAGE : BB_MIN_AND_MAX;
     int rbw_type = (s->NativeRBW()) ?
-                BB_NATIVE_RBW : BB_NON_NATIVE_RBW;
+                0 : 1;
     int rejection = (s->Rejection()) ?
                 BB_SPUR_REJECT : BB_NO_SPUR_REJECT;
     double sweep_time = s->SweepTime().Val();
@@ -190,7 +192,6 @@ bool DeviceBB60A::Reconfigure(const SweepSettings *s, Trace *t)
     STATUS_CHECK(bbConfigureLevel(id, reference, (s->Atten()-1) * 10));
     STATUS_CHECK(bbConfigureSweepCoupling(id, s->RBW(), s->VBW(), sweep_time,
                                           rbw_type, rejection));
-    STATUS_CHECK(bbConfigureWindow(id, BB_NUTALL));
     STATUS_CHECK(bbConfigureProcUnits(id, s->ProcessingUnits()));
     STATUS_CHECK(bbConfigureGain(id, s->Gain() - 1));
 
@@ -238,6 +239,7 @@ bool DeviceBB60A::GetSweep(const SweepSettings *s, Trace *t)
 
     // Manually handle some errors, and populate variables in the event of warnings
     lastStatus = bbFetchTrace_32f(id, t->Length(), t->Min(), t->Max());
+   // qDebug() << "DeviceBB60A::GetSweep tMin = " << t->Min()[0];
     if(lastStatus == bbDeviceConnectionErr) {
         // True connection issue, throw signal
         // emit connectionIssue() throw warning
@@ -281,8 +283,8 @@ bool DeviceBB60A::GetRealTimeFrame(Trace &t, RealTimeFrame &frame)
         MainWindow::GetStatusBar()->SetDiagnostics(diagnostics);
         update_diagnostics_string = false;
     }
-
-    lastStatus = bbFetchRealTimeFrame(id, t.Max(), &frame.alphaFrame[0]);
+    float *frame_;
+    lastStatus = bbFetchRealTimeFrame(id,t.Min(), t.Max(), frame_,&frame.alphaFrame[0]);
     if(lastStatus == bbDeviceConnectionErr || lastStatus == bbUSBTimeoutErr) {
         emit connectionIssues();
         return false;
@@ -366,7 +368,9 @@ bool DeviceBB60A::Reconfigure(const DemodSettings *ds, IQDescriptor *desc)
 
 bool DeviceBB60A::GetIQ(IQCapture *iqc)
 {
-    lastStatus = bbFetchRaw(id, (float*)(&iqc->capture[0]), iqc->triggers);
+    bbIQPacket *ipk;
+    //cần phát triển thêm để getIQ
+    lastStatus = bbGetIQ(id, ipk);
     // Handle connection issues
     if(lastStatus == bbDeviceConnectionErr || lastStatus == bbUSBTimeoutErr || lastStatus == bbPacketFramingErr) {
         emit connectionIssues();

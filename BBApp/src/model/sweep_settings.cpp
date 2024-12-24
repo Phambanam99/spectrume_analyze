@@ -398,7 +398,10 @@ void SweepSettings::setSpan(Frequency f)
 
     center = (start + stop) / 2.0;
     span = stop - start;
+    if(device_traits::type == DeviceTypeRtlSdr){
+        span = 3200000;
 
+    }
     AutoBandwidthAdjust(false);
     UpdateProgram();
 }

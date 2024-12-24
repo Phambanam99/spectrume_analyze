@@ -7,12 +7,17 @@
 #include "views/central_stack.h"
 #include "../model/session.h"
 #include "../widgets/entry_widgets.h"
-
+#include "../model/datastore.h"
+#include "../lib/params.h"
+#include "../lib/acquisition.h"
+#include <memory>
 class QToolBar;
 class PlaybackToolBar;
 class QSplitter;
 class TraceView;
 class WaterfallView;
+
+
 
 class SweepCentral : public CentralWidget {
     Q_OBJECT
@@ -27,11 +32,14 @@ public:
     void StartStreaming();
     void StopStreaming();
     void ResetView();
+    void runReceiver_(SweepSettings *t,Trace *trace);
     void GetViewImage(QImage &image);
+    void ReconfiugreRtl(  SweepSettings *t);
     Frequency GetCurrentCenterFreq() const {
         return session_ptr->sweep_settings->Center(); }
     // Force view back to initial start-up values
     // No persistence, waterfall, etc.
+    // Getter methods to access configured objects
 
 protected:
     void resizeEvent(QResizeEvent*);
@@ -68,7 +76,7 @@ private:
     bool programClosing;
     std::atomic<bool> sweeping;
     std::atomic<int> sweep_count;
-
+    Params params;                     // Configuration parameters
 signals:
     void updateView();
 
@@ -85,6 +93,7 @@ private slots:
     // Update the view behind the scenes
     void forceUpdateView();
     void playFromFile(bool play);
+
 };
 
 #endif // SWEEP_CENTRAL_H

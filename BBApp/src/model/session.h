@@ -30,6 +30,7 @@ public:
 
     Device *device;
     // Sweep/Real-time related
+    DeviceRtlSdr *deviceRtl;
     SweepSettings *sweep_settings;
     //RTL sweep setting
     SweepSettings *rtl_sweep_settings;
