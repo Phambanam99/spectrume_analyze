@@ -26,7 +26,8 @@
 #include "exceptions.h"
 
 
-Params::Params() {    int N = 512;
+Params::Params() {
+     N = 512;
      dev_index = 0;
      gain = 372;
      cfreq = 1420405752;

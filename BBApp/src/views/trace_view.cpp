@@ -589,12 +589,12 @@ void TraceView::RenderGratText(QPainter &p)
         int uncal_x = grat_ul.x() + 5, uncal_y = grat_ul.y() - textHeight;
         //glColor3f(1.0, 0.0, 0.0);
         p.setPen(QPen(QColor(255, 0, 0)));
-        if(!GetSession()->device->IsPowered()) {
+        if(!GetSession()->device->IsPowered() && GetSession()->device->GetDeviceType() != DeviceTypeRtlSdr) {
             uncal = true;
             DrawString(p, "Low Voltage", uncal_x, uncal_y, LEFT_ALIGNED);
             uncal_y -= textHeight;
         }
-        if(GetSession()->device->ADCOverflow()) {
+        if(GetSession()->device->ADCOverflow() && GetSession()->device->GetDeviceType() != DeviceTypeRtlSdr ) {
             uncal = true;
             DrawString(p, "IF Overload", uncal_x, uncal_y, LEFT_ALIGNED);
             uncal_y -= textHeight;

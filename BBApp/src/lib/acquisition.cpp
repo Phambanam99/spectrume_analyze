@@ -37,7 +37,6 @@ AuxData::AuxData(const Params& params) {
     // Hardcode giá trị của window function và baseline
 
     // 1. Tạo window function (ví dụ sử dụng Hamming window)
-    std::cerr << "Generating window function..." << std::endl;
     window_values = calculateWindowFunction(params.N, "hamming");
     if ((int)window_values.size() == params.N) {
         std::cerr << "Succesfully generated " << window_values.size() << " window function points." << std::endl;
@@ -48,8 +47,6 @@ AuxData::AuxData(const Params& params) {
             ReturnValue::InvalidInput);
     }
 
-    // 2. Tạo baseline (giả sử tất cả các giá trị bằng 0, hoặc một giá trị cụ thể)
-    std::cerr << "Generating baseline values..." << std::endl;
     baseline_values = std::vector<double>(params.N, 30); // Gán tất cả giá trị baseline là -20.0
 
     if ((int)baseline_values.size() == params.N) {
@@ -258,7 +255,7 @@ void Acquisition::run() {
     bool success = false;
     for (int tune_try = 0; !success && tune_try < max_tune_tries; tune_try++)
     {
-        if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Tuning to " << freq << " Hz (try " << tune_try + 1 << ")" << std::endl;
+        // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Tuning to " << freq << " Hz (try " << tune_try + 1 << ")" << std::endl;
 
         try {
             rtldev.set_frequency(freq);
@@ -276,7 +273,7 @@ void Acquisition::run() {
         throw TuneError(freq);
     }
 
-    if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Device tuned to: " << tuned_freq << " Hz" << std::endl;
+    // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Device tuned to: " << tuned_freq << " Hz" << std::endl;
     std::fill(data.pwr.begin(), data.pwr.end(), 0);
     data.acquisition_finished = false;
     data.repeats_done = 0;
@@ -291,7 +288,7 @@ void Acquisition::run() {
         firstAcqTimestamp = currentDateTime();
         cntTimeStamps++;
     }
-    if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Acquisition started at " << startAcqTimestamp << std::endl;
+    // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Acquisition started at " << startAcqTimestamp << std::endl;
 
     // Calculate the stop time. This will only be effective if --strict-time was given.
     std::chrono::steady_clock::time_point stopTime = std::chrono::steady_clock::now() + std::chrono::milliseconds(int64_t(params.integration_time*1000));
@@ -366,7 +363,7 @@ void Acquisition::run() {
     sumScanDur = sumScanDur + difftime(scanEnd, scanBeg);
     avgScanDur = sumScanDur / metaRows;
 
-    if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Acquisition done at " << endAcqTimestamp << std::endl;
+    // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Acquisition done at " << endAcqTimestamp << std::endl;
 
     status_lock.lock();
     data.acquisition_finished = true;
@@ -376,6 +373,10 @@ void Acquisition::run() {
 }
 
 void Acquisition::print_summary() const {
+     std::cerr << "Gain of the device: "
+              << params.gain<< std::endl;
+    std::cerr << "Length of FFT: "
+              << (int64_t)params.N<< std::endl;
     std::cerr << "Actual number of (complex) samples collected: "
               << (int64_t)params.N * data.repeats_done << std::endl;
     std::cerr << "Actual number of device readouts: " << deviceReadouts << std::endl;

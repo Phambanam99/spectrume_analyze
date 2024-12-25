@@ -63,9 +63,8 @@ void static rtlsdrCallback(unsigned char *buf, uint32_t len, void *ctx)
 {
 }
 
-bool DeviceRtlSdr::Reconfigure(const SweepSettings *s, Trace *t) {
-      qDebug() << "test in Reconfigure";
-    if (!open) {
+bool DeviceRtlSdr::Reconfigure(const SweepSettings *s, Trace *t,Params *params) {
+    if (!open)  {
             return false;
         }
     const double sampleRates[] = {
@@ -95,27 +94,30 @@ bool DeviceRtlSdr::Reconfigure(const SweepSettings *s, Trace *t) {
         "2.88MHz",
         "3.2MHz"
     };
-        sampleRate = sampleRates[0];
-        rtlsdr_set_freq_correction(device, ppm);
-        rtlsdr_set_tuner_bandwidth(device, 0);
-        rtlsdr_set_direct_sampling(device, directSamplingMode);
-        rtlsdr_set_bias_tee(device,biasT);
-        rtlsdr_set_agc_mode(device, rtlAgc);
-        asyncCount = (int)(sampleRate / (200 * 512)) * 512;
+        print_gains();
+        int gain = nearest_gain(params -> gain);
+    //    std::cerr << "Selected nearest available gain: " << gain
+    //              << " (" << 0.1*gain << " dB)" << std::endl;
+        set_gain(gain);
 
-//        Abort();
-        // RTL-SDR specific configuration
-        rtlsdr_set_center_freq(device, s->Center());
-        int _gain = 0;
-         rtlsdr_set_tuner_gain_mode(device, _gain);
-        // Initiating the device
-        // No direct initiation function for RTL-SDR
-        rtlsdr_set_center_freq(device, s->Center());
-        rtlsdr_set_sample_rate(device, sampleRate);
+        try {
+           set_frequency(params -> cfreq);
+        }
+        catch (RPFexception&) {}
+
+        // Set frequency correction
+        if (params ->ppm_error != 0) {
+            set_freq_correction(params -> ppm_error);
+    //        std::cerr << "PPM error set to: " << params.ppm_error << std::endl;
+        }
+
+        // Set sample rate
+        set_sample_rate(params -> sample_rate);
         t->SetSettings(*s);
-        t->SetSize(1024); // Example size
+        t->SetSize(params -> N); // Example size
         t->SetFreq(s->Span() / 1024, s->Center() - s->Span() / 2);
         t->SetUpdateRange(0, 1024);
+
         // No direct function to get diagnostics in RTL-SDR
         last_temp = 0;
         voltage = 0;
@@ -136,7 +138,6 @@ bool DeviceRtlSdr::OpenDeviceWithSerial(int serialToOpen) {
             return false;
 
         }
-// 1 rtl-sdr
         if (rtlsdr_open(&dev, 0) < 0) {
             qDebug() << "Failed to open RTL-SDR device";
             open = false;
@@ -145,8 +146,6 @@ bool DeviceRtlSdr::OpenDeviceWithSerial(int serialToOpen) {
 
         device = dev;
          qDebug() << "Successfully opened RTL-SDR device " << device ;
-        // If no matching device is found, show an error message
-        //QMessageBox::warning(nullptr, "RTL-SDR", "Successfully opened RTL-SDR device");
         open = true;
         return true;
 }

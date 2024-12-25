@@ -4,6 +4,7 @@
 #include "device.h"
 #include "../lib/device_traits.h"
 #include "../lib/fftw3.h"
+#include "../lib/params.h"
 class Preferences;
 
 class DeviceRtlSdr : public Device {
@@ -26,7 +27,7 @@ public:
     virtual bool ConfigureGain(int gain);
     // Data fetching
     virtual bool GetIQData(std::vector<uint8_t> &iq_buffer, int &n_read);
-    virtual bool Reconfigure(const SweepSettings *s, Trace *t);
+    virtual bool Reconfigure(const SweepSettings *s, Trace *t, Params *params);
     virtual bool GetSweep(const SweepSettings *s, Trace *t);
     // Status and info
 

@@ -111,19 +111,19 @@ SweepPanel::SweepPanel(const QString &title,
 
 
     frequency_page->AddWidget(center);
+    frequency_page->AddWidget(span);
 
     if(deviceType == DeviceTypeRtlSdr){
       frequency_page->AddWidget(sampleRateRtrl);
       frequency_page -> AddWidget(gainRtl);
     }else {
 
-
-        frequency_page->AddWidget(span);
-        frequency_page->AddWidget(start);
-        frequency_page->AddWidget(stop);
-        frequency_page->AddWidget(step);
         frequency_page->AddWidget(full_zero_span);
 }
+
+    frequency_page->AddWidget(start);
+    frequency_page->AddWidget(stop);
+    frequency_page->AddWidget(step);
 
 
     amplitude_page->AddWidget(ref);

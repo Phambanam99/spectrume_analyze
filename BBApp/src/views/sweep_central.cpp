@@ -204,12 +204,10 @@ void SweepCentral::wheelEvent(QWheelEvent *we)
 // Try new settings
 // If new settings fail, revert to old settings
 void SweepCentral::Reconfigure()
-{    qDebug() << "check";
+{   
      bool check = session_ptr ->device->Reconfigure(session_ptr->sweep_settings, &trace);
-     qDebug() << check;
     if(check){
          last_config = *session_ptr->sweep_settings;
-          qDebug() << "test in Reconfigure";
     } else
     if(!session_ptr->device->Reconfigure(session_ptr->sweep_settings, &trace)) {
 
@@ -226,67 +224,30 @@ void SweepCentral::Reconfigure()
     reconfigure = false;
 
 }
-void SweepCentral::ReconfiugreRtl(  SweepSettings *t){
-
-}
-
-void SweepCentral::runReceiver_(SweepSettings *t, Trace *trace)
-{
+void SweepCentral::ReconfiugreRtl(  SweepSettings *s,DeviceRtlSdr *rtldev ){
     params.N = 1024;                      // Số bins trong FFT
     params.window = true;                 // Sử dụng window function
     params.baseline = true;               // Sử dụng baseline correction
     params.cropPercentage = 10.0;         // Loại bỏ 10% bins ở hai biên FFT
-    params.hops = 1;                      // Chỉ quét một lần
+    params.hops = 1;
+    params.startfreq = s -> start.Val(); // Chỉ quét một lần
+    params.stopfreq = s -> stop.Val();
     params.dev_index = 0;                 // Chỉ số thiết bị RTL-SDR
     params.gain = 372;                    // Độ khuếch đại (gain)
     params.sample_rate = 3200000;         // Tốc độ mẫu (sample rate)
-    params.cfreq = t->Center();
-    // Read auxiliary data for window function and baseline correction.
-    AuxData auxData(params);
+    params.cfreq = (int) s ->center.Val();
+    rtldev->Reconfigure(session_ptr->sweep_settings, &trace, &params);
+    reconfigure = false;
+}
 
-
-    // Set up RTL-SDR device
-    DeviceRtlSdr *rtldev = static_cast<DeviceRtlSdr*>(session_ptr->device);
-    // Print the available gains and select the one nearest to the requested gain.
-    rtldev ->print_gains();
-    int gain = rtldev -> nearest_gain(params.gain);
-//    std::cerr << "Selected nearest available gain: " << gain
-//              << " (" << 0.1*gain << " dB)" << std::endl;
-    rtldev -> set_gain(gain);
-
-    try {
-        rtldev -> set_frequency(params.cfreq);
-    }
-    catch (RPFexception&) {}
-
-    // Set frequency correction
-    if (params.ppm_error != 0) {
-        rtldev -> set_freq_correction(params.ppm_error);
-//        std::cerr << "PPM error set to: " << params.ppm_error << std::endl;
-    }
-
-    // Set sample rate
-    rtldev -> set_sample_rate(params.sample_rate);
-    int actual_samplerate = rtldev -> sample_rate();
-//    std::cerr << "Actual sample rate: " << actual_samplerate << " Hz" << std::endl;
-
-    // Create a plan of the operation. This will calculate the number of repeats,
-    // adjust the buffer size for optimal performance and create a list of frequency
-    // hops.
-   // Create a plan for operation
-    Plan plan(params, actual_samplerate);
-
-    // Prepare data buffers
-    Datastore data(params, auxData.window_values);
-    // Print info on capture time and associated specifics.
-    plan.print();
-
-
-    params.finalfreq = plan.freqs_to_tune.back();
+bool SweepCentral::runReceiver_(SweepSettings *s, Trace *trace, Params params, Plan *plan,
+                                DeviceRtlSdr *rtldev, AuxData *auxData, Datastore *data )
+{
+      int actual_samplerate = rtldev -> sample_rate();
     //Read from device and do FFT
-        for (auto iter = plan.freqs_to_tune.begin(); iter != plan.freqs_to_tune.end();) {
+        for (auto iter = plan -> freqs_to_tune.begin(); iter != plan ->freqs_to_tune.end();) {
             // Begin a new data acquisition.
-            Acquisition *acquisition = new Acquisition(params, auxData, *rtldev, data, actual_samplerate, *iter);
+            Acquisition *acquisition = new Acquisition(params, *auxData, *rtldev, *data, actual_samplerate, *iter);
             try {
                 // Read the required amount of data and process it.
                 acquisition ->run();
@@ -296,51 +257,112 @@ void SweepCentral::runReceiver_(SweepSettings *t, Trace *trace)
                 // The receiver was unable to tune to this frequency. It might be just a "dead"
                 // spot of the receiver. Remove this frequency from the list and continue.
                 std::cerr << "Unable to tune to " << e.frequency() << ". Dropping from frequency list." << std::endl;
-                iter = plan.freqs_to_tune.erase(iter);
+                iter = plan -> freqs_to_tune.erase(iter);
                 continue;
             }
             // Print a summary (number of samples, readouts etc.) to stderr.
-            if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) acquisition -> print_summary();
+            // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) acquisition -> print_summary();
             // Write the gathered data to stdout.
             float *  pwr = acquisition -> caculatePwr();
             trace -> setMin(pwr);
             trace -> setMax(pwr);
 
         }
+        return true;
       
 }
 // Main sweep loop
 void SweepCentral::SweepThread()
 {
-    qDebug() << "fuck";
-     DeviceRtlSdr *rtldev; 
-    if(session_ptr->device->GetDeviceType() == DeviceTypeRtlSdr){
+     if(session_ptr->device->GetDeviceType() == DeviceTypeRtlSdr){
+     SweepThreadRtl();
+     } else SweepThreadSignalHound();
+}
+void SweepCentral::SweepThreadRtl()
+{
+     DeviceRtlSdr *rtldev;
+     AuxData *auxData;
+     int actual_samplerate;
+     Plan *plan ;
+     Datastore *data;
+
      rtldev = static_cast<DeviceRtlSdr*>(session_ptr->device);
-     ReconfiugreRtl(&last_config);
-    } else Reconfigure();
+     ReconfiugreRtl(&last_config,rtldev);
+     auxData = new AuxData(params);
+     actual_samplerate = rtldev -> sample_rate();
+     plan = new Plan(params, actual_samplerate);
+     data = new Datastore(params, auxData ->window_values);
+     params.finalfreq = plan -> freqs_to_tune.back();
 
     while(sweeping) {
-        qDebug() <<"1";
+       qDebug() <<"Rtl reconfig " <<reconfigure;
+        if(reconfigure) {
+          ReconfiugreRtl(&last_config,rtldev);
+           session_ptr->trace_manager->ClearAllTraces();
+        }
+
+        if(sweep_count) {
+            bool sweepSuccess;
+            if(last_config.Mode() == MODE_REAL_TIME) {
+                sweepSuccess = session_ptr->device->GetRealTimeFrame(trace, rtFrame);
+            } else {
+//
+                sweepSuccess =  runReceiver_(&last_config, &trace, params,  plan,
+                                rtldev,  auxData,  data);
+            }
+
+            if(!sweepSuccess) {
+                sweeping = false;
+                return;
+            }
+
+            if(trace.IsFullSweep()) {
+                playback->PutTrace(&trace);
+            }
+
+            session_ptr->trace_manager->UpdateTraces(&trace);
+
+            if(last_config.IsRealTime()) {
+                session_ptr->trace_manager->realTimeFrame = rtFrame;
+            }
+            emit updateView();
+
+            // Non-negative sweep count means we only collect 'n' more sweeps
+            if(sweep_count > 0 && trace.IsFullSweep()) {
+                sweep_count--;
+            }
+
+            // Artificial sweep delay, should be used sparingly
+            if((session_ptr->sweep_settings->Mode() == BB_SWEEPING) &&
+                    (session_ptr->prefs.sweepDelay > 0)) {
+                Sleep(session_ptr->prefs.sweepDelay);
+            }
+
+        } else {
+            Sleep(10);
+        }
+    }
+
+    session_ptr->device->Abort();
+}
+void SweepCentral::SweepThreadSignalHound()
+{
+    Reconfigure();
+    while(sweeping) {
+       qDebug() <<"signal hound recongif " <<reconfigure;
         if(reconfigure) {
             Reconfigure();
             session_ptr->trace_manager->ClearAllTraces();
         }
 
         if(sweep_count) {
-//            if(!session_ptr->device->GetSweep(session_ptr->sweep_settings, &trace)) {
-//                sweeping = false;
-//                return;
-//            }
-
             bool sweepSuccess;
             if(last_config.Mode() == MODE_REAL_TIME) {
                 sweepSuccess = session_ptr->device->GetRealTimeFrame(trace, rtFrame);
             } else {
 //
-                if(session_ptr->device->GetDeviceType() == DeviceTypeRtlSdr){
-                  runReceiver_(&last_config, &trace);
-                }
-                else sweepSuccess = session_ptr->device->GetSweep(&last_config, &trace);
+                if(session_ptr->device->GetDeviceType() != DeviceTypeRtlSdr){
+                 sweepSuccess = session_ptr->device->GetSweep(&last_config, &trace);}
 //                std::cerr << "haha" << trace.Max()[0] << "hehe" << trace.Min()[0];
             }
 
