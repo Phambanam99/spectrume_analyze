@@ -27,7 +27,7 @@ public:
     virtual bool ConfigureGain(int gain);
     // Data fetching
     virtual bool GetIQData(std::vector<uint8_t> &iq_buffer, int &n_read);
-    virtual bool Reconfigure(const SweepSettings *s, Trace *t, Params *params);
+    virtual bool Reconfigure(const SweepSettings *s, Trace *t);
     virtual bool GetSweep(const SweepSettings *s, Trace *t);
     // Status and info
 

@@ -33,7 +33,6 @@ public:
     DeviceRtlSdr *deviceRtl;
     SweepSettings *sweep_settings;
     //RTL sweep setting
-    SweepSettings *rtl_sweep_settings;
     TraceManager *trace_manager;
     // Demod related
     DemodSettings *demod_settings;

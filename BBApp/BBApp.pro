@@ -63,8 +63,7 @@ SOURCES += src/main.cpp \
     src/widgets/self_test_dialog.cpp \
     src/model/preferences.cpp \
     src/model/device_rtlsdr.cpp \
-    src/lib/metadata.cpp \
-    src/widgets/sweep_rtl_panel.cpp
+    src/lib/metadata.cpp
 
 HEADERS += src/mainwindow.h \
     src/lib/acquisition.h \
@@ -134,8 +133,7 @@ HEADERS += src/mainwindow.h \
     src/model/device_rtlsdr.h \
     ../../../../../Downloads/Compressed/fftw-3.3.5-dll64/fftw3.h \
     src/lib/fftw3.h \
-    src/lib/metadata.h \
-    src/widgets/sweep_rtl_panel.h
+    src/lib/metadata.h
 
 OTHER_FILES += \
     style_sheet.css \

@@ -204,8 +204,10 @@ void SweepCentral::wheelEvent(QWheelEvent *we)
 // Try new settings
 // If new settings fail, revert to old settings
 void SweepCentral::Reconfigure()
-{   
-     bool check = session_ptr ->device->Reconfigure(session_ptr->sweep_settings, &trace);
+{   if(device_traits::get_device_rtl())
+    {
+
+        bool check = session_ptr ->device->Reconfigure(session_ptr->sweep_settings, &trace);
     if(check){
          last_config = *session_ptr->sweep_settings;
     } else
@@ -222,25 +224,34 @@ void SweepCentral::Reconfigure()
         sweep_count = 1;
     }
     reconfigure = false;
-
 }
-void SweepCentral::ReconfiugreRtl(  SweepSettings *s,DeviceRtlSdr *rtldev ){
-    params.N = 1024;                      // Số bins trong FFT
-    params.window = true;                 // Sử dụng window function
-    params.baseline = true;               // Sử dụng baseline correction
-    params.cropPercentage = 10.0;         // Loại bỏ 10% bins ở hai biên FFT
-    params.hops = 1;
-    params.startfreq = s -> start.Val(); // Chỉ quét một lần
-    params.stopfreq = s -> stop.Val();
-    params.dev_index = 0;                 // Chỉ số thiết bị RTL-SDR
-    params.gain = 372;                    // Độ khuếch đại (gain)
-    params.sample_rate = 3200000;         // Tốc độ mẫu (sample rate)
-    params.cfreq = (int) s ->center.Val();
-    rtldev->Reconfigure(session_ptr->sweep_settings, &trace, &params);
+}
+void SweepCentral::ReconfiugreRtl(DeviceRtlSdr *rtldev ){
+         last_config = *session_ptr->sweep_settings;
+         rtldev->Reconfigure(&last_config, &trace);
+         params.N = 1024*2*2;                      // Số bins trong FFT
+         params.window = true;                 // Sử dụng window function
+         params.baseline = true;               // Sử dụng baseline correction
+         params.cropPercentage = 10.0;         // Loại bỏ 10% bins ở hai biên FFT
+         params.hops = 1;
+         params.sample_rate = (int)rtldev -> sample_rate();
+         params.startfreq = last_config.Center().Val() - (int)params.sample_rate/2; // Chỉ quét một lần
+         params.stopfreq = last_config.Center().Val() - (int)params.sample_rate/2;
+         params.dev_index = 0;                 // Chỉ số thiết bị RTL-SDR
+         params.gain = 372;                    // Độ khuếch đại (gain)
+                 // Tốc độ mẫu (sample rate)
+         params.cfreq = (int) last_config.Center().Val();
+           qDebug() << "add sweep" <<    &last_config ;
+
+         qDebug() << "rtl fre " <<     params.cfreq  ;
+
+    if(sweep_count == 0) {
+        sweep_count = 1;
+    }
     reconfigure = false;
 }
 
-bool SweepCentral::runReceiver_(SweepSettings *s, Trace *trace, Params params, Plan *plan,
+bool SweepCentral::runReceiver_(Trace *trace, Params params, Plan *plan,
                                 DeviceRtlSdr *rtldev, AuxData *auxData, Datastore *data )
 {
       int actual_samplerate = rtldev -> sample_rate();
@@ -275,8 +286,12 @@ bool SweepCentral::runReceiver_(SweepSettings *s, Trace *trace, Params params, P
 void SweepCentral::SweepThread()
 {
      if(session_ptr->device->GetDeviceType() == DeviceTypeRtlSdr){
+         qDebug() << 1;
      SweepThreadRtl();
-     } else SweepThreadSignalHound();
+     } else {
+         qDebug() << 2;
+         SweepThreadSignalHound();
+     }
 }
 void SweepCentral::SweepThreadRtl()
 {
@@ -287,7 +302,7 @@ void SweepCentral::SweepThreadRtl()
      Datastore *data;
 
      rtldev = static_cast<DeviceRtlSdr*>(session_ptr->device);
-     ReconfiugreRtl(&last_config,rtldev);
+     ReconfiugreRtl(rtldev);
      auxData = new AuxData(params);
      actual_samplerate = rtldev -> sample_rate();
      plan = new Plan(params, actual_samplerate);
@@ -295,9 +310,9 @@ void SweepCentral::SweepThreadRtl()
      params.finalfreq = plan -> freqs_to_tune.back();
 
     while(sweeping) {
-       qDebug() <<"Rtl reconfig " <<reconfigure;
         if(reconfigure) {
-          ReconfiugreRtl(&last_config,rtldev);
+            qDebug() << "wtf" ;
+          ReconfiugreRtl(rtldev);
            session_ptr->trace_manager->ClearAllTraces();
         }
 
@@ -307,7 +322,7 @@ void SweepCentral::SweepThreadRtl()
                 sweepSuccess = session_ptr->device->GetRealTimeFrame(trace, rtFrame);
             } else {
 //
-                sweepSuccess =  runReceiver_(&last_config, &trace, params,  plan,
+                sweepSuccess =  runReceiver_(&trace, params,  plan,
                                 rtldev,  auxData,  data);
             }
 
@@ -349,7 +364,6 @@ void SweepCentral::SweepThreadSignalHound()
 {
     Reconfigure();
     while(sweeping) {
-       qDebug() <<"signal hound recongif " <<reconfigure;
         if(reconfigure) {
             Reconfigure();
             session_ptr->trace_manager->ClearAllTraces();
@@ -360,10 +374,8 @@ void SweepCentral::SweepThreadSignalHound()
             if(last_config.Mode() == MODE_REAL_TIME) {
                 sweepSuccess = session_ptr->device->GetRealTimeFrame(trace, rtFrame);
             } else {
-//
                 if(session_ptr->device->GetDeviceType() != DeviceTypeRtlSdr){
                  sweepSuccess = session_ptr->device->GetSweep(&last_config, &trace);}
-//                std::cerr << "haha" << trace.Max()[0] << "hehe" << trace.Min()[0];
             }
 
             if(!sweepSuccess) {

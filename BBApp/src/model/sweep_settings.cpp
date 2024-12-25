@@ -26,7 +26,7 @@ SweepSettings& SweepSettings::operator=(const SweepSettings &other)
     step = other.step;
     rbw = other.rbw;
     vbw = other.vbw;
-
+    sample_rate_rtl = other.sample_rate_rtl;
     auto_rbw = other.auto_rbw;
     auto_vbw = other.auto_vbw;
     native_rbw = other.native_rbw;
@@ -71,6 +71,7 @@ bool SweepSettings::operator==(const SweepSettings &other) const
     if(div != other.div) return false;
     if(attenuation != other.attenuation) return false;
     if(gain != other.gain) return false;
+     if(sample_rate_rtl != other.sample_rate_rtl) return false;
     if(preamp != other.preamp) return false;
 
     if(sweepTime != other.sweepTime) return false;
@@ -96,19 +97,20 @@ void SweepSettings::LoadDefaults()
     mode = MODE_SWEEPING;
 
     std::pair<double, double> freqs = device_traits::full_span_frequencies();
-    if(device_traits::get_device_type() == DeviceTypeRtlSdr){
-        center = 100.0e6;
-        span = 3.2e6;
-        start = center - span/2;
-        stop = center + span/2;
-    } else {
+
+//    if(devieType == DeviceTypeRtlSdr){
+//        span = 3.2e6;
+//        center = 100.0e6;
+//        stop = center + span/2 ;
+//        start = center - span/2 ;
+//    }else
+    {
         start = device_traits::best_start_frequency();
         stop = device_traits::max_frequency();
-
         span = (stop - start);
         center = (start + stop) / 2.0;
     }
-
+    sample_rate_rtl = 0;
     step = 20.0e6;
 
     auto_rbw = true;
@@ -144,7 +146,8 @@ bool SweepSettings::Load(QSettings &s)
     start = s.value("Sweep/Start", Start().Val()).toDouble();
     stop = s.value("Sweep/Stop", Stop().Val()).toDouble();
     center = s.value("Sweep/Center", Center().Val()).toDouble();
-    span = s.value("Sweep/Span", Span().Val()).toDouble();
+    span = s.value("Sweep/Span",  Span().Val()).toDouble();
+    sample_rate_rtl = s.value("Sweep/SampleRate", SampleRateRtl()).toInt();
     step = s.value("Sweep/Step", Step().Val()).toDouble();
     rbw = s.value("Sweep/RBW", RBW().Val()).toDouble();
     vbw = s.value("Sweep/VBW", VBW().Val()).toDouble();
@@ -180,6 +183,7 @@ bool SweepSettings::Save(QSettings &s) const
     s.setValue("Sweep/Stop", stop.Val());
     s.setValue("Sweep/Center", center.Val());
     s.setValue("Sweep/Span", span.Val());
+    s.setValue("Sweep/SampleRate", sample_rate_rtl);
     s.setValue("Sweep/Step", step.Val());
     s.setValue("Sweep/RBW", rbw.Val());
     s.setValue("Sweep/VBW", vbw.Val());
@@ -348,15 +352,22 @@ void SweepSettings::setStop(Frequency f)
         span = stop - start;
         center = start + (span / 2.0);
 }
-
+    qDebug() << stop;
     AutoBandwidthAdjust(false);
     UpdateProgram();
 }
-
+//TodoForRtl
 void SweepSettings::setCenter(Frequency f)
 {
-    // Is the center even possible?
-    if(f < (device_traits::min_real_time_rbw() + device_traits::min_span() * 2.0) ||
+//    if(device_traits::get_device_rtl()){
+//        center = f;
+//        span = span.Val();
+//        start = center - span/2;
+//        stop = center + span/2;
+//    }
+//    // Is the center even possible?
+//    else
+        if(f < (device_traits::min_real_time_rbw() + device_traits::min_span() * 2.0) ||
             f > (device_traits::max_frequency() - device_traits::min_span() * 2.0)) {
         // Do nothing
     } else {
@@ -380,7 +391,12 @@ void SweepSettings::increaseCenter(bool inc)
         setCenter(center - step);
     }
 }
-
+void SweepSettings::setSampleRate(int f)
+{
+    sample_rate_rtl = f;
+    AutoBandwidthAdjust(false);
+    UpdateProgram();
+}
 void SweepSettings::setSpan(Frequency f)
 {
     if(f < device_traits::min_span()) {

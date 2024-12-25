@@ -258,7 +258,7 @@ void Acquisition::run() {
         // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Tuning to " << freq << " Hz (try " << tune_try + 1 << ")" << std::endl;
 
         try {
-            rtldev.set_frequency(freq);
+            //rtldev.set_frequency(params.cfreq);
             tuned_freq = rtldev.frequency();
             if (tuned_freq != 0)
                 success = true;
@@ -357,11 +357,11 @@ void Acquisition::run() {
     }
 
     // Record the end-of-acquisition timestamp.
-    endAcqTimestamp = currentDateTime();
-    time(&scanEnd);
-    lastAcqTimestamp = currentDateTime();
-    sumScanDur = sumScanDur + difftime(scanEnd, scanBeg);
-    avgScanDur = sumScanDur / metaRows;
+//    endAcqTimestamp = currentDateTime();
+//    time(&scanEnd);
+//    lastAcqTimestamp = currentDateTime();
+//    sumScanDur = sumScanDur + difftime(scanEnd, scanBeg);
+//    avgScanDur = sumScanDur / metaRows;
 
     // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Acquisition done at " << endAcqTimestamp << std::endl;
 

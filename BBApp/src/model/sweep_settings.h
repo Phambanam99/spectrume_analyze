@@ -34,6 +34,7 @@ public:
     Frequency Stop() const { return stop; }
     Frequency Center() const { return center; }
     Frequency Span() const { return span; }
+    int SampleRateRtl() const { return sample_rate_rtl; }
     Frequency Step() const { return step; }
     Frequency RBW() const { return rbw; }
     Frequency VBW() const { return vbw; }
@@ -97,7 +98,8 @@ public:
     Frequency step;
     Frequency rbw;
     Frequency vbw;
-
+    Frequency binFft;
+    int sample_rate_rtl;
     bool auto_rbw;
     bool auto_vbw;
     bool native_rbw;
@@ -131,6 +133,7 @@ public slots:
     void setStart(Frequency);
     void setStop(Frequency);
     void setCenter(Frequency);
+    void setSampleRate(int);
     void increaseCenter(bool);
     void setSpan(Frequency);
     void increaseSpan(bool);

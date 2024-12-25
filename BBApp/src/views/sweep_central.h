@@ -32,10 +32,10 @@ public:
     void StartStreaming();
     void StopStreaming();
     void ResetView();
-    bool runReceiver_(SweepSettings *s, Trace *trace, Params params, Plan *plan,
+    bool runReceiver_(Trace *trace, Params params, Plan *plan,
                       DeviceRtlSdr *rtldev, AuxData *auxData, Datastore *data);
     void GetViewImage(QImage &image);
-    void ReconfiugreRtl(  SweepSettings *t, DeviceRtlSdr *rtldev);
+    void ReconfiugreRtl(DeviceRtlSdr *rtldev);
     Frequency GetCurrentCenterFreq() const {
         return session_ptr->sweep_settings->Center(); }
     // Force view back to initial start-up values

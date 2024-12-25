@@ -9,9 +9,8 @@ Session::Session()
     //device = new DeviceSA(&prefs);
 
     device_traits::set_device_type(device->GetDeviceType());
-
+    device_traits::device_rtl(false);
     sweep_settings = new SweepSettings();
-    rtl_sweep_settings = new SweepSettings();
     trace_manager = new TraceManager();
     demod_settings = new DemodSettings();
     audio_settings = new AudioSettings();
@@ -26,9 +25,8 @@ Session::Session()
 Session::Session(Device *my_device)
 {
     device = my_device;
-    device_traits::set_device_type(device->GetDeviceType());
+    device_traits::device_rtl(true);
     sweep_settings = new SweepSettings();
-    rtl_sweep_settings = new SweepSettings();
     trace_manager = new TraceManager();
     demod_settings = new DemodSettings();
     audio_settings = new AudioSettings();

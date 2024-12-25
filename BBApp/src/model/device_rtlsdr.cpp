@@ -18,7 +18,7 @@ DeviceRtlSdr::DeviceRtlSdr(const Preferences *preferences)
 
         // Handler stuff
         asyncCount = 0;
-        sampleRate;
+        sampleRate = 3200000;
 
 }
 bool DeviceRtlSdr::OpenDevice(int dev_index) {
@@ -63,11 +63,12 @@ void static rtlsdrCallback(unsigned char *buf, uint32_t len, void *ctx)
 {
 }
 
-bool DeviceRtlSdr::Reconfigure(const SweepSettings *s, Trace *t,Params *params) {
+bool DeviceRtlSdr::Reconfigure(const SweepSettings *s, Trace *t) {
+    qDebug() << "addr sweepSeting " << s;
     if (!open)  {
             return false;
         }
-    const double sampleRates[] = {
+    const int sampleRates[] = {
         250000,
         1024000,
         1536000,
@@ -94,28 +95,31 @@ bool DeviceRtlSdr::Reconfigure(const SweepSettings *s, Trace *t,Params *params) 
         "2.88MHz",
         "3.2MHz"
     };
-        print_gains();
-        int gain = nearest_gain(params -> gain);
+//        print_gains();
+        int gain = nearest_gain(372);
     //    std::cerr << "Selected nearest available gain: " << gain
     //              << " (" << 0.1*gain << " dB)" << std::endl;
         set_gain(gain);
 
         try {
-           set_frequency(params -> cfreq);
+           set_frequency((int) s->Center().Val());
         }
         catch (RPFexception&) {}
 
         // Set frequency correction
-        if (params ->ppm_error != 0) {
-            set_freq_correction(params -> ppm_error);
-    //        std::cerr << "PPM error set to: " << params.ppm_error << std::endl;
-        }
+//        if (params ->ppm_error != 0) {
+//            set_freq_correction(params -> ppm_error);
+//    //        std::cerr << "PPM error set to: " << params.ppm_error << std::endl;
+//        }
 
         // Set sample rate
-        set_sample_rate(params -> sample_rate);
+        sampleRate = sampleRates[s -> SampleRateRtl()];
+        qDebug() << "sample rate rtl" <<sampleRate;
+
+        set_sample_rate(sampleRate);
         t->SetSettings(*s);
-        t->SetSize(params -> N); // Example size
-        t->SetFreq(s->Span() / 1024, s->Center() - s->Span() / 2);
+        t->SetSize(1024); // Example size
+        t->SetFreq(s->Span().Val() /1024, s->Center() - s->Span() / 2);
         t->SetUpdateRange(0, 1024);
 
         // No direct function to get diagnostics in RTL-SDR
@@ -291,6 +295,7 @@ void DeviceRtlSdr::set_gain(int gain) {
 }
 
 void DeviceRtlSdr::set_frequency(uint32_t frequency) {
+        qDebug() << "set rtl center fer " << frequency;
     if (rtlsdr_set_center_freq(device, frequency) < 0) {
         throw RPFexception(
             "RTL device: could not set center frequency.",
@@ -300,7 +305,7 @@ void DeviceRtlSdr::set_frequency(uint32_t frequency) {
     // behaviour if it was commented out, so we left it in. If you actually know
     // why this would be necessary (or, to the contrary, that it is complete
     // bullshit), you are most welcome to explain it here!
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
 }
 
 void DeviceRtlSdr::set_freq_correction(int ppm_error) {

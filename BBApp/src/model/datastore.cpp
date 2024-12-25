@@ -35,12 +35,10 @@ void Datastore::fftThread()
         status_lock(status_mutex, std::defer_lock);
     int fft_pointer = 0;
     while (true) {
-        // Wait until we have a bufferful of data
         status_lock.lock();
         while (occupied_buffers.empty() && !acquisition_finished)
             status_change.wait(status_lock);
         if (occupied_buffers.empty()) {
-            // acquisition finished
             break;
         }
         std::vector<uint8_t>& buffer(*occupied_buffers.front());

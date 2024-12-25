@@ -114,16 +114,15 @@ SweepPanel::SweepPanel(const QString &title,
     frequency_page->AddWidget(span);
 
     if(deviceType == DeviceTypeRtlSdr){
+
       frequency_page->AddWidget(sampleRateRtrl);
       frequency_page -> AddWidget(gainRtl);
     }else {
-
+        frequency_page->AddWidget(start);
+        frequency_page->AddWidget(stop);
+        frequency_page->AddWidget(step);
         frequency_page->AddWidget(full_zero_span);
 }
-
-    frequency_page->AddWidget(start);
-    frequency_page->AddWidget(stop);
-    frequency_page->AddWidget(step);
 
 
     amplitude_page->AddWidget(ref);
@@ -169,6 +168,8 @@ SweepPanel::SweepPanel(const QString &title,
 
     connect(center, SIGNAL(freqViewChanged(Frequency)),
             settings, SLOT(setCenter(Frequency)));
+    connect(sampleRateRtrl, SIGNAL(comboIndexChanged(int)),
+            settings, SLOT(setSampleRate(int)));
     connect(center, SIGNAL(shift(bool)),
             settings, SLOT(increaseCenter(bool)));
     connect(span, SIGNAL(freqViewChanged(Frequency)),
@@ -367,6 +368,9 @@ void SweepPanel::init(const QString &title, QWidget *parent, Session *session){
             settings, SLOT(setDiv(double)));
     connect(gain, SIGNAL(comboIndexChanged(int)),
             settings, SLOT(setGain(int)));
+
+    connect(sampleRateRtrl, SIGNAL(comboIndexChanged(int)),
+            settings, SLOT(setSampleRate(int)));
     connect(atten, SIGNAL(comboIndexChanged(int)),
             settings, SLOT(setAttenuation(int)));
     connect(preamp, SIGNAL(comboIndexChanged(int)),
@@ -424,6 +428,7 @@ void SweepPanel::updatePanel(const SweepSettings *settings)
     ref->SetAmplitude(settings->RefLevel());
     div->SetValue(settings->Div());
     gain->setComboIndex(settings->Gain());
+    sampleRateRtrl->setComboIndex(settings->SampleRateRtl());
     atten->setComboIndex(settings->Atten());
     preamp->setComboIndex(settings->Preamp());
 

@@ -57,10 +57,6 @@ public:
 protected:
     int freq;
 };
-class SharedData {
-public:
-    std::vector<float> spectrum;
-};
 
 // This class performs data acquisition at a particular frequency.
 class Acquisition : public QObject{
@@ -72,6 +68,8 @@ public:
                 Datastore& data,
                 int actual_samplerate,
                 int freq);
+
+
     // Run the data acquisition.
     void run();
     // Print a summary of the acquisition (number of samples collected, number of

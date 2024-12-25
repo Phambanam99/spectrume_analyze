@@ -44,11 +44,19 @@ static double max_bw_table_sa[] = {
 };
 
 DeviceType device_traits::type = DeviceTypeBB60C;
-
+bool device_traits::deviceRtl = false;
 void device_traits::set_device_type(DeviceType new_type)
 {
     type = new_type;
 }
+void device_traits::device_rtl(bool _deviceRtl)
+{
+    deviceRtl = _deviceRtl;
+}
+bool device_traits::get_device_rtl(){
+    return deviceRtl;
+}
+
 DeviceType device_traits::get_device_type()
 {
     return type;

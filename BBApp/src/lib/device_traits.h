@@ -18,6 +18,8 @@ enum DeviceType {
 class device_traits {
 public:
     static void set_device_type(DeviceType new_type);
+    static void device_rtl(bool _dev);
+    static bool get_device_rtl();
     static DeviceType get_device_type();
     static double min_span();
     static double min_frequency();
@@ -47,6 +49,8 @@ public:
 
 private:
     static DeviceType type;
+    static bool deviceRtl;
+
 };
 
 #endif // DEVICE_TRAITS_H
