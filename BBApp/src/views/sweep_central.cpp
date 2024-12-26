@@ -228,8 +228,9 @@ void SweepCentral::Reconfigure()
 }
 void SweepCentral::ReconfiugreRtl(DeviceRtlSdr *rtldev ){
          last_config = *session_ptr->sweep_settings;
+//         last_config.Span().Val() = rtldev -> sample_rate() ;
          rtldev->Reconfigure(&last_config, &trace);
-         params.N = 1024*2*2;                      // Số bins trong FFT
+         params.N = 1024;                      // Số bins trong FFT
          params.window = true;                 // Sử dụng window function
          params.baseline = true;               // Sử dụng baseline correction
          params.cropPercentage = 10.0;         // Loại bỏ 10% bins ở hai biên FFT
@@ -238,7 +239,7 @@ void SweepCentral::ReconfiugreRtl(DeviceRtlSdr *rtldev ){
          params.startfreq = last_config.Center().Val() - (int)params.sample_rate/2; // Chỉ quét một lần
          params.stopfreq = last_config.Center().Val() - (int)params.sample_rate/2;
          params.dev_index = 0;                 // Chỉ số thiết bị RTL-SDR
-         params.gain = 372;                    // Độ khuếch đại (gain)
+         params.gain = rtldev -> gains()[last_config.Gain()];                    // Độ khuếch đại (gain)
                  // Tốc độ mẫu (sample rate)
          params.cfreq = (int) last_config.Center().Val();
            qDebug() << "add sweep" <<    &last_config ;
@@ -254,11 +255,11 @@ void SweepCentral::ReconfiugreRtl(DeviceRtlSdr *rtldev ){
 bool SweepCentral::runReceiver_(Trace *trace, Params params, Plan *plan,
                                 DeviceRtlSdr *rtldev, AuxData *auxData, Datastore *data )
 {
-      int actual_samplerate = rtldev -> sample_rate();
+
     //Read from device and do FFT
         for (auto iter = plan -> freqs_to_tune.begin(); iter != plan ->freqs_to_tune.end();) {
             // Begin a new data acquisition.
-            Acquisition *acquisition = new Acquisition(params, *auxData, *rtldev, *data, actual_samplerate, *iter);
+            Acquisition *acquisition = new Acquisition(params, *auxData, *rtldev, *data, params.sample_rate, *iter);
             try {
                 // Read the required amount of data and process it.
                 acquisition ->run();
@@ -267,12 +268,12 @@ bool SweepCentral::runReceiver_(Trace *trace, Params params, Plan *plan,
             catch (TuneError &e) {
                 // The receiver was unable to tune to this frequency. It might be just a "dead"
                 // spot of the receiver. Remove this frequency from the list and continue.
-                std::cerr << "Unable to tune to " << e.frequency() << ". Dropping from frequency list." << std::endl;
+//                std::cerr << "Unable to tune to " << e.frequency() << ". Dropping from frequency list." << std::endl;
                 iter = plan -> freqs_to_tune.erase(iter);
                 continue;
             }
             // Print a summary (number of samples, readouts etc.) to stderr.
-            // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) acquisition -> print_summary();
+//             if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) acquisition -> print_summary();
             // Write the gathered data to stdout.
             float *  pwr = acquisition -> caculatePwr();
             trace -> setMin(pwr);
@@ -306,6 +307,7 @@ void SweepCentral::SweepThreadRtl()
      auxData = new AuxData(params);
      actual_samplerate = rtldev -> sample_rate();
      plan = new Plan(params, actual_samplerate);
+     plan->print();
      data = new Datastore(params, auxData ->window_values);
      params.finalfreq = plan -> freqs_to_tune.back();
 

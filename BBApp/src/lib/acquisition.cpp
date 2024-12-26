@@ -111,6 +111,7 @@ Plan::Plan(Params& params_, int actual_samplerate_) :
         }
 
         hops = ceil((double(params.stopfreq - params.startfreq) - min_overhang) / (double(actual_samplerate) - min_overhang));
+          std::cerr << "Planned hops: " << hops << std::endl;
         if (hops > 1) {
             int overhang = (hops*actual_samplerate - (params.stopfreq - params.startfreq)) / (hops - 1);
             freqs_to_tune.push_back(params.startfreq + actual_samplerate/2.0);
@@ -258,7 +259,7 @@ void Acquisition::run() {
         // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Tuning to " << freq << " Hz (try " << tune_try + 1 << ")" << std::endl;
 
         try {
-            //rtldev.set_frequency(params.cfreq);
+            rtldev.set_frequency(params.cfreq);
             tuned_freq = rtldev.frequency();
             if (tuned_freq != 0)
                 success = true;
@@ -282,16 +283,16 @@ void Acquisition::run() {
     std::thread t(&Datastore::fftThread, &data);
 
     // Record the start-of-acquisition timestamp.
-    startAcqTimestamp = currentDateTime();
-    time(&scanBeg);
-    if(cntTimeStamps==0) {
-        firstAcqTimestamp = currentDateTime();
-        cntTimeStamps++;
-    }
+//    startAcqTimestamp = currentDateTime();
+//    time(&scanBeg);
+//    if(cntTimeStamps==0) {
+//        firstAcqTimestamp = currentDateTime();
+//        cntTimeStamps++;
+//    }
     // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Acquisition started at " << startAcqTimestamp << std::endl;
 
     // Calculate the stop time. This will only be effective if --strict-time was given.
-    std::chrono::steady_clock::time_point stopTime = std::chrono::steady_clock::now() + std::chrono::milliseconds(int64_t(params.integration_time*1000));
+//    std::chrono::steady_clock::time_point stopTime = std::chrono::steady_clock::now() + std::chrono::milliseconds(int64_t(params.integration_time*1000));
 
     std::unique_lock<std::mutex>
         status_lock(data.status_mutex, std::defer_lock);
@@ -348,8 +349,8 @@ void Acquisition::run() {
             status_lock.unlock();
         }
 
-        if (params.strict_time && (std::chrono::steady_clock::now() >= stopTime))
-            break;
+//        if (params.strict_time && (std::chrono::steady_clock::now() >= stopTime))
+//            break;
 
         // See if we have been instructed to conclude this measurement immediately.
         //if (interrupts && checkInterrupt(InterruptState::FinishNow))
@@ -373,6 +374,8 @@ void Acquisition::run() {
 }
 
 void Acquisition::print_summary() const {
+    std::cerr << "Hops: "
+             << params.hops<< std::endl;
      std::cerr << "Gain of the device: "
               << params.gain<< std::endl;
     std::cerr << "Length of FFT: "

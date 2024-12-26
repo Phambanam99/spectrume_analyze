@@ -15,7 +15,6 @@ DeviceRtlSdr::DeviceRtlSdr(const Preferences *preferences)
         biasT = false;
         gainId = 0;
         directSamplingMode = 0;
-
         // Handler stuff
         asyncCount = 0;
         sampleRate = 3200000;
@@ -82,23 +81,10 @@ bool DeviceRtlSdr::Reconfigure(const SweepSettings *s, Trace *t) {
         3200000
     };
 
-    const char* sampleRatesTxt[] = {
-        "250KHz",
-        "1.024MHz",
-        "1.536MHz",
-        "1.792MHz",
-        "1.92MHz",
-        "2.048MHz",
-        "2.16MHz",
-        "2.4MHz",
-        "2.56MHz",
-        "2.88MHz",
-        "3.2MHz"
-    };
-//        print_gains();
-        int gain = nearest_gain(372);
-    //    std::cerr << "Selected nearest available gain: " << gain
-    //              << " (" << 0.1*gain << " dB)" << std::endl;
+
+
+        int gain = nearest_gain((int) gains()[s -> Gain()]);
+        qDebug() << "set Gain " << gain;
         set_gain(gain);
 
         try {
@@ -106,7 +92,7 @@ bool DeviceRtlSdr::Reconfigure(const SweepSettings *s, Trace *t) {
         }
         catch (RPFexception&) {}
 
-        // Set frequency correction
+//         Set frequency correction
 //        if (params ->ppm_error != 0) {
 //            set_freq_correction(params -> ppm_error);
 //    //        std::cerr << "PPM error set to: " << params.ppm_error << std::endl;
@@ -114,8 +100,6 @@ bool DeviceRtlSdr::Reconfigure(const SweepSettings *s, Trace *t) {
 
         // Set sample rate
         sampleRate = sampleRates[s -> SampleRateRtl()];
-        qDebug() << "sample rate rtl" <<sampleRate;
-
         set_sample_rate(sampleRate);
         t->SetSettings(*s);
         t->SetSize(1024); // Example size
@@ -295,7 +279,6 @@ void DeviceRtlSdr::set_gain(int gain) {
 }
 
 void DeviceRtlSdr::set_frequency(uint32_t frequency) {
-        qDebug() << "set rtl center fer " << frequency;
     if (rtlsdr_set_center_freq(device, frequency) < 0) {
         throw RPFexception(
             "RTL device: could not set center frequency.",
@@ -305,7 +288,7 @@ void DeviceRtlSdr::set_frequency(uint32_t frequency) {
     // behaviour if it was commented out, so we left it in. If you actually know
     // why this would be necessary (or, to the contrary, that it is complete
     // bullshit), you are most welcome to explain it here!
-    std::this_thread::sleep_for(std::chrono::milliseconds(3));
+//    std::this_thread::sleep_for(std::chrono::milliseconds(3));
 }
 
 void DeviceRtlSdr::set_freq_correction(int ppm_error) {

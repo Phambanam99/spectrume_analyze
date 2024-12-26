@@ -16,7 +16,7 @@ class SweepSettings : public QObject {
 public:
     SweepSettings();
     SweepSettings(const SweepSettings &other);
-    ~SweepSettings() {}
+    ~SweepSettings() { --count;}
 
     SweepSettings& operator=(const SweepSettings &other);
     bool operator==(const SweepSettings &other) const;
@@ -75,7 +75,9 @@ public:
             return b;
         }
     }
-
+    static int getInstanceCount() {
+          return count;
+      }
     // Returns true if settings fine for CP/OCBW
     bool IsAveragePower() const;
 
@@ -100,6 +102,7 @@ public:
     Frequency vbw;
     Frequency binFft;
     int sample_rate_rtl;
+
     bool auto_rbw;
     bool auto_vbw;
     bool native_rbw;
@@ -114,6 +117,7 @@ public:
     int detector;
     // Set in Settings File Menu
     bool rejection;
+    static int  count;
 protected:
 
 private:
@@ -134,6 +138,7 @@ public slots:
     void setStop(Frequency);
     void setCenter(Frequency);
     void setSampleRate(int);
+
     void increaseCenter(bool);
     void setSpan(Frequency);
     void increaseSpan(bool);

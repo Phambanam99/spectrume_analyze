@@ -52,7 +52,7 @@ SweepPanel::SweepPanel(const QString &title,
         gainRtl->setComboText(gainsRtl);
         gainRtl->setEnabled(true);
     }
-    qDebug() << "hereee";
+
     sampleRateRtrl = new ComboEntry(tr("Sample Rate"));
     if(deviceType == DeviceTypeRtlSdr){
          QStringList sampleRatesTxt;
@@ -67,10 +67,23 @@ SweepPanel::SweepPanel(const QString &title,
     div = new NumericEntry(tr("Div"), 1.0, tr("dB"));
     gain = new ComboEntry(tr("Gain"));
     QStringList gain_sl;
-    gain_sl << tr("Auto Gain") << tr("Gain 0") << tr("Gain 1") <<
-               tr("Gain 2") << tr("Gain 3");
+    if(deviceType == DeviceTypeRtlSdr){
+
+       gain_sl << tr("0.0") << tr("0.9") << tr("1.4") << tr("2.7")
+               << tr("3.7") << tr("7.7") << tr("8.7") << tr("12.5")
+               << tr("14.4") << tr("15.7") << tr("16.6") << tr("19.7")
+               << tr("20.7") << tr("22.9") << tr("25.4") << tr("28.0")
+               << tr("29.7") << tr("32.8") << tr("33.8") << tr("36.4")
+               << tr("37.2") << tr("38.6") << tr("40.2") << tr("42.1")
+               << tr("43.4") << tr("43.9") << tr("44.5") << tr("48.0")
+               << tr("49.6");
+        gain->setEnabled(true);
+    } else { gain_sl << tr("Auto Gain") << tr("Gain 0") << tr("Gain 1") <<
+                        tr("Gain 2") << tr("Gain 3");
+    gain->setEnabled(false);}
+
     gain->setComboText(gain_sl);
-    gain->setEnabled(false);
+
 
     atten = new ComboEntry(tr("Atten"));
     QStringList atten_sl;
@@ -112,22 +125,23 @@ SweepPanel::SweepPanel(const QString &title,
 
     frequency_page->AddWidget(center);
     frequency_page->AddWidget(span);
-
+    frequency_page->AddWidget(start);
+    frequency_page->AddWidget(stop);
     if(deviceType == DeviceTypeRtlSdr){
 
       frequency_page->AddWidget(sampleRateRtrl);
-      frequency_page -> AddWidget(gainRtl);
+      frequency_page -> AddWidget(gain);
+      span -> setEnabled(false);
+      start -> setEnabled(false);
+      stop -> setEnabled(false);
     }else {
-        frequency_page->AddWidget(start);
-        frequency_page->AddWidget(stop);
         frequency_page->AddWidget(step);
         frequency_page->AddWidget(full_zero_span);
 }
 
-
     amplitude_page->AddWidget(ref);
     amplitude_page->AddWidget(div);
-    amplitude_page->AddWidget(gain);
+    if(deviceType != DeviceTypeRtlSdr) amplitude_page->AddWidget(gain);
     amplitude_page->AddWidget(atten);
     amplitude_page->AddWidget(preamp);
 
@@ -140,16 +154,15 @@ SweepPanel::SweepPanel(const QString &title,
     acquisition_page->AddWidget(video_units);
     acquisition_page->AddWidget(detector);
     acquisition_page->AddWidget(sweep_time);
+    AppendPage(frequency_page);
 
     if(DeviceTypeRtlSdr != deviceType){
          AppendPage(tg_page);
          AppendPage(amplitude_page);
          AppendPage(bandwidth_page);
          AppendPage(acquisition_page);
-
     }
 
-    AppendPage(frequency_page);
 
 
     // Set panel and connect here

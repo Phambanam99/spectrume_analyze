@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
     move(0, 0);
     const QRect r = QApplication::desktop()->screenGeometry();
     resize(r.width() - 20 , r.height() - 80 );
-
     session = new Session();
 
     session1 = new Session(new DeviceRtlSdr(&session -> prefs));
@@ -882,7 +881,7 @@ void MainWindow::deviceRtlConnected(bool success){
     QString device_string;
     if(success){
         device_string = session1 -> device -> GetDeviceString();
-        device_traits::set_device_type(session1->device->GetDeviceType());
+//        device_traits::set_device_type(session1->device->GetDeviceType());
         session1->LoadDefaults();
         connect(session1->device, SIGNAL(connectionIssues()),
                 this, SLOT(forceDisconnectDevice()));

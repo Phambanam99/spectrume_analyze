@@ -4,9 +4,10 @@
 
 #include "lib/bb_api.h"
 #include "lib/device_traits.h"
-
+int SweepSettings::count = 0;
 SweepSettings::SweepSettings()
 {
+    ++count;
     LoadDefaults();    
 }
 
@@ -96,21 +97,13 @@ void SweepSettings::LoadDefaults()
 {
     mode = MODE_SWEEPING;
 
-    std::pair<double, double> freqs = device_traits::full_span_frequencies();
+    start = 100.0e6;
+    stop =103.20e6;
 
-//    if(devieType == DeviceTypeRtlSdr){
-//        span = 3.2e6;
-//        center = 100.0e6;
-//        stop = center + span/2 ;
-//        start = center - span/2 ;
-//    }else
-    {
-        start = device_traits::best_start_frequency();
-        stop = device_traits::max_frequency();
-        span = (stop - start);
-        center = (start + stop) / 2.0;
-    }
-    sample_rate_rtl = 0;
+    span = (stop - start);
+    center = (start + stop) / 2.0;
+
+    sample_rate_rtl = 10;
     step = 20.0e6;
 
     auto_rbw = true;
@@ -393,7 +386,24 @@ void SweepSettings::increaseCenter(bool inc)
 }
 void SweepSettings::setSampleRate(int f)
 {
-    sample_rate_rtl = f;
+    const int sampleRates[] = {
+        250000,
+        1024000,
+        1536000,
+        1792000,
+        1920000,
+        2048000,
+        2160000,
+        2400000,
+        2560000,
+        2880000,
+        3200000
+    };
+      sample_rate_rtl = f;
+      span = (double)sampleRates[f];
+      start = center - span / 2;
+      stop = center + span /2;
+
     AutoBandwidthAdjust(false);
     UpdateProgram();
 }
