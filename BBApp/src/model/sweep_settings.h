@@ -35,6 +35,7 @@ public:
     Frequency Center() const { return center; }
     Frequency Span() const { return span; }
     int SampleRateRtl() const { return sample_rate_rtl; }
+    int FftLenRtl() const {return fftL;}
     Frequency Step() const { return step; }
     Frequency RBW() const { return rbw; }
     Frequency VBW() const { return vbw; }
@@ -109,6 +110,7 @@ public:
 
     double div; // dB
     int attenuation;
+    int fftL;
     int gain; // From 0 -> 4, where 0 equals auto, 1-4 = levels
     int preamp; // auto = 0, off = 1, on = 2
 
@@ -159,6 +161,7 @@ public slots:
     void setDiv(double);
     void setAttenuation(int);
     void setGain(int);
+    void setFffLen(int);
     void setPreAmp(int);
 
     void setSweepTime(Time);

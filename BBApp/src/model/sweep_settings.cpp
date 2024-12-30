@@ -28,6 +28,7 @@ SweepSettings& SweepSettings::operator=(const SweepSettings &other)
     rbw = other.rbw;
     vbw = other.vbw;
     sample_rate_rtl = other.sample_rate_rtl;
+    fftL = other.fftL;
     auto_rbw = other.auto_rbw;
     auto_vbw = other.auto_vbw;
     native_rbw = other.native_rbw;
@@ -62,6 +63,7 @@ bool SweepSettings::operator==(const SweepSettings &other) const
     if(center != other.center) return false;
     if(span != other.span) return false;
     if(step != other.step) return false;
+    if(fftL != other.fftL) return false;
     if(rbw != other.rbw) return false;
     if(vbw != other.vbw) return false;
 
@@ -116,6 +118,7 @@ void SweepSettings::LoadDefaults()
     div = 10.0;
     attenuation = 0;
     gain = 0;
+    fftL = 1;
     preamp = 0;
 
     // Standard sweep only, real-time sweep time in prefs
@@ -141,6 +144,7 @@ bool SweepSettings::Load(QSettings &s)
     center = s.value("Sweep/Center", Center().Val()).toDouble();
     span = s.value("Sweep/Span",  Span().Val()).toDouble();
     sample_rate_rtl = s.value("Sweep/SampleRate", SampleRateRtl()).toInt();
+    fftL = s.value("Sweep/FftLen", FftLenRtl()).toInt();
     step = s.value("Sweep/Step", Step().Val()).toDouble();
     rbw = s.value("Sweep/RBW", RBW().Val()).toDouble();
     vbw = s.value("Sweep/VBW", VBW().Val()).toDouble();
@@ -177,6 +181,7 @@ bool SweepSettings::Save(QSettings &s) const
     s.setValue("Sweep/Center", center.Val());
     s.setValue("Sweep/Span", span.Val());
     s.setValue("Sweep/SampleRate", sample_rate_rtl);
+    s.setValue("Sweep/FftLen", fftL);
     s.setValue("Sweep/Step", step.Val());
     s.setValue("Sweep/RBW", rbw.Val());
     s.setValue("Sweep/VBW", vbw.Val());
@@ -598,7 +603,11 @@ void SweepSettings::setGain(int gain_ix)
     gain = gain_ix;
     UpdateProgram();
 }
-
+void SweepSettings::setFffLen(int fftL_ix)
+{
+    fftL = fftL_ix;
+    UpdateProgram();
+}
 void SweepSettings::setPreAmp(int preamp_ix)
 {
     preamp = preamp_ix;

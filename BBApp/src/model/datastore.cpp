@@ -1,7 +1,8 @@
 
 #include <iostream>
 #include "datastore.h"
-
+#include <QTime>
+#include <QDebug>
 Datastore::Datastore(const Params& params_, std::vector<float>& window_values_) :
     params(params_), queue_histogram(params.buffers+1, 0),
     window_values(window_values_), pwr(params.N)
@@ -31,6 +32,7 @@ Datastore::~Datastore() {
 
 void Datastore::fftThread()
 {
+
     std::unique_lock<std::mutex>
         status_lock(status_mutex, std::defer_lock);
     int fft_pointer = 0;
@@ -75,6 +77,7 @@ void Datastore::fftThread()
         status_change.notify_all();
         status_lock.unlock();
     }
+
 }
 
 void Datastore::printQueueHistogram() const {

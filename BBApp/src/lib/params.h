@@ -6,7 +6,7 @@
 #include "exceptions.h"
 
 const int base_buf = 16384;
-const int default_buf_multiplier = 100;
+const int default_buf_multiplier = 1;
 
 class Params {
 public:

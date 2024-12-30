@@ -66,6 +66,12 @@ SweepPanel::SweepPanel(const QString &title,
     ref = new AmplitudeEntry(tr("Ref"), 0.0);
     div = new NumericEntry(tr("Div"), 1.0, tr("dB"));
     gain = new ComboEntry(tr("Gain"));
+    fftLen = new ComboEntry(tr("Len FFT"));
+    QStringList fft_sl;
+    fft_sl << tr("1024") << tr("2048") << tr("4096") << tr("8192") << tr("16386");
+    fftLen ->setEnabled(true);
+    fftLen -> setComboText(fft_sl);
+
     QStringList gain_sl;
     if(deviceType == DeviceTypeRtlSdr){
 
@@ -77,6 +83,7 @@ SweepPanel::SweepPanel(const QString &title,
                << tr("37.2") << tr("38.6") << tr("40.2") << tr("42.1")
                << tr("43.4") << tr("43.9") << tr("44.5") << tr("48.0")
                << tr("49.6");
+
         gain->setEnabled(true);
     } else { gain_sl << tr("Auto Gain") << tr("Gain 0") << tr("Gain 1") <<
                         tr("Gain 2") << tr("Gain 3");
@@ -128,9 +135,9 @@ SweepPanel::SweepPanel(const QString &title,
     frequency_page->AddWidget(start);
     frequency_page->AddWidget(stop);
     if(deviceType == DeviceTypeRtlSdr){
-
       frequency_page->AddWidget(sampleRateRtrl);
       frequency_page -> AddWidget(gain);
+      frequency_page -> AddWidget(fftLen);
       span -> setEnabled(false);
       start -> setEnabled(false);
       stop -> setEnabled(false);
@@ -183,6 +190,8 @@ SweepPanel::SweepPanel(const QString &title,
             settings, SLOT(setCenter(Frequency)));
     connect(sampleRateRtrl, SIGNAL(comboIndexChanged(int)),
             settings, SLOT(setSampleRate(int)));
+    connect(fftLen, SIGNAL(comboIndexChanged(int)),
+            settings, SLOT(setFffLen(int)));
     connect(center, SIGNAL(shift(bool)),
             settings, SLOT(increaseCenter(bool)));
     connect(span, SIGNAL(freqViewChanged(Frequency)),
@@ -381,6 +390,8 @@ void SweepPanel::init(const QString &title, QWidget *parent, Session *session){
             settings, SLOT(setDiv(double)));
     connect(gain, SIGNAL(comboIndexChanged(int)),
             settings, SLOT(setGain(int)));
+    connect(fftLen, SIGNAL(comboIndexChanged(int)),
+            settings, SLOT(setFffLen(int)));
 
     connect(sampleRateRtrl, SIGNAL(comboIndexChanged(int)),
             settings, SLOT(setSampleRate(int)));
@@ -441,6 +452,7 @@ void SweepPanel::updatePanel(const SweepSettings *settings)
     ref->SetAmplitude(settings->RefLevel());
     div->SetValue(settings->Div());
     gain->setComboIndex(settings->Gain());
+    fftLen -> setComboIndex(settings->FftLenRtl());
     sampleRateRtrl->setComboIndex(settings->SampleRateRtl());
     atten->setComboIndex(settings->Atten());
     preamp->setComboIndex(settings->Preamp());

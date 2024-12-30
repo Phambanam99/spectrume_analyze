@@ -30,6 +30,10 @@ public:
     virtual bool Reconfigure(const SweepSettings *s, Trace *t);
     virtual bool GetSweep(const SweepSettings *s, Trace *t);
     // Status and info
+    int static lentFFt(int index){
+        const int fftLens[] = {1024,2048,4096,8192,16384};
+        return fftLens[index];
+    }
 
     virtual QString GetDeviceString() const;
     void worker(Trace *t);

@@ -5,7 +5,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDialog>
-
+#include <mutex>
 #include <iostream>
 
 Trace::Trace(bool active, int size)
@@ -54,6 +54,8 @@ void Trace::Copy(const Trace &other)
 // Destroy buffers and set to null
 void Trace::Destroy()
 {
+
+
     if(_minBuf) {
         delete [] _minBuf;
         _minBuf = nullptr;
@@ -62,6 +64,7 @@ void Trace::Destroy()
         delete [] _maxBuf;
         _maxBuf = nullptr;
     }
+     _size = 0;
 }
 
 void Trace::Alloc(int newSize)
@@ -71,6 +74,7 @@ void Trace::Alloc(int newSize)
 
     // Sizes different, delete and re-alloc
     Destroy();
+
 
     _size = newSize;
     _minBuf = new float[_size];

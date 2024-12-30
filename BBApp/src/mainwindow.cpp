@@ -47,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     sweep_panel = new SweepPanel(tr("Sweep Settings"), this,session);
     sweep_panel->setObjectName("SweepSettingsPanel");
-     qDebug() << session1 -> device->GetDeviceType();
     rtl_sweep_panel = new SweepPanel(tr("RTL Sweep Settings"), this, session1);
     rtl_sweep_panel->setObjectName("RtlSweepSettingsPanel");
     rtl_sweep_panel -> RemovePage(rtl_sweep_panel -> tg_page);
@@ -108,108 +107,29 @@ MainWindow::MainWindow(QWidget *parent)
     // Thêm CentralStack vào phần trên của splitter
     splitter->addWidget(centralStack);
 
-    // Phần điều khiển RTL-SDR
-
-    // QWidget *emptyWidget = new QWidget(this);
-    // emptyWidget->setStyleSheet("background-color: lightgray;"); // Màu cho dễ nhìn
-    // splitter->addWidget(emptyWidget);
-    // rtl_sweep_panel = new RtlSweepPanel(tr("RTL-SDR Config"), this, session);
-    // rtl_sweep_panel -> setObjectName("RtlSweepSettingsPanel");
-    // splitter->addWidget(rtl_sweep_panel);
-
-
-
     centralStack1 = new CentralStack(this);
-    // Thêm một widget trống vào phần dưới của splitter
     sweepCentral1 = new SweepCentral(session1, toolBar);
     sweepCentral1->EnableToolBarActions(false);
     centralStack1->AddWidget(sweepCentral1);
-    qDebug() <<sweepCentral1;
-    demodCentral1 = new DemodCentral(session1, toolBar);
-    demodCentral->EnableToolBarActions(false);
-   // centralStack1->AddWidget(demodCentral1);
 
-    harmonicCentral1 = new HarmonicsCentral(session1, toolBar);
-   // centralStack1->AddWidget(harmonicCentral1);
-
-    tgCentral1 = new TGCentral(session1, toolBar);
-   // centralStack1->AddWidget(tgCentral1);
-
-    phaseNoiseCentral1 = new PhaseNoiseCentral(session1, toolBar);
-    phaseNoiseCentral1->EnableToolBarActions(false);
-    //centralStack1->AddWidget(phaseNoiseCentral1);
    
 
-    centralStack2 = new CentralStack(this);
-    // Thêm một widget trống vào phần dưới của splitter
-    sweepCentral = new SweepCentral(session, toolBar);
-    sweepCentral->EnableToolBarActions(false);
-    centralStack2->AddWidget(sweepCentral);
+//    centralStack2 = new CentralStack(this);
+//    splitter->addWidget(centralStack2);
 
-    demodCentral = new DemodCentral(session, toolBar);
-    demodCentral->EnableToolBarActions(false);
-    centralStack2->AddWidget(demodCentral);
+//    centralStack3 = new CentralStack(this);
+//    splitter->addWidget(centralStack3);
 
-    harmonicCentral = new HarmonicsCentral(session, toolBar);
-    centralStack2->AddWidget(harmonicCentral);
-
-    tgCentral = new TGCentral(session, toolBar);
-    centralStack2->AddWidget(tgCentral);
-
-    phaseNoiseCentral = new PhaseNoiseCentral(session, toolBar);
-    phaseNoiseCentral->EnableToolBarActions(false);
-    centralStack2->AddWidget(phaseNoiseCentral);
-    splitter->addWidget(centralStack2);
-
-    centralStack3 = new CentralStack(this);
-    // Thêm một widget trống vào phần dưới của splitter
-    sweepCentral = new SweepCentral(session, toolBar);
-    sweepCentral->EnableToolBarActions(false);
-    centralStack3->AddWidget(sweepCentral);
-
-    demodCentral = new DemodCentral(session, toolBar);
-    demodCentral->EnableToolBarActions(false);
-    centralStack3->AddWidget(demodCentral);
-
-    harmonicCentral = new HarmonicsCentral(session, toolBar);
-    centralStack3->AddWidget(harmonicCentral);
-
-    tgCentral = new TGCentral(session, toolBar);
-    centralStack3->AddWidget(tgCentral);
-
-    phaseNoiseCentral = new PhaseNoiseCentral(session, toolBar);
-    phaseNoiseCentral->EnableToolBarActions(false);
-    centralStack3->AddWidget(phaseNoiseCentral);
-    splitter->addWidget(centralStack3);
-
-    centralStack4 = new CentralStack(this);
-    // Thêm một widget trống vào phần dưới của splitter
-    sweepCentral = new SweepCentral(session, toolBar);
-    sweepCentral->EnableToolBarActions(false);
-    centralStack4->AddWidget(sweepCentral);
-
-    demodCentral = new DemodCentral(session, toolBar);
-    demodCentral->EnableToolBarActions(false);
-    centralStack4->AddWidget(demodCentral);
-
-    harmonicCentral = new HarmonicsCentral(session, toolBar);
-    centralStack4->AddWidget(harmonicCentral);
-
-    tgCentral = new TGCentral(session, toolBar);
-    centralStack4->AddWidget(tgCentral);
-
-    phaseNoiseCentral = new PhaseNoiseCentral(session, toolBar);
-    phaseNoiseCentral->EnableToolBarActions(false);
-    centralStack4->AddWidget(phaseNoiseCentral);
-    splitter->addWidget(centralStack4);
+//    centralStack4 = new CentralStack(this);
+//    splitter->addWidget(centralStack4);
      
 // Tạo widget phải chứa QGridLayout
     QWidget *RtlWidget = new QWidget;
     QGridLayout *rightLayout = new QGridLayout;
     rightLayout->addWidget(centralStack1, 0, 0);
-    rightLayout->addWidget(centralStack2, 0, 1);
-    rightLayout->addWidget(centralStack3, 1, 0);
-    rightLayout->addWidget(centralStack4, 1, 1);
+//    rightLayout->addWidget(centralStack2, 0, 1);
+//    rightLayout->addWidget(centralStack3, 1, 0);
+//    rightLayout->addWidget(centralStack4, 1, 1);
     RtlWidget->setLayout(rightLayout);
     splitter->addWidget(RtlWidget);
     // Thiết lập tỉ lệ chiều cao giữa hai phần
@@ -766,15 +686,6 @@ void MainWindow::connectDeviceUponOpen()
     auto listDeviceInfoRtl = session1 -> device -> GetRtlList();
     int countBB = 0;
     auto list = listDeviceInfoBB;
-    // if(list.size() == 0) {
-    //       QMessageBox::warning(this, "Signal Hound", "No Device Found.");
-    //       return;
-    //   }
-    //   if(list.size() > 1) {
-    //       QMessageBox::warning(this, "Message", "More than one device found. "
-    //                            "Use the File->Connect menu to select which device to open.");
-    //       return;
-    //   }
         if(listDeviceInfoBB.size() > 0){
             DeviceConnectionInfo item = listDeviceInfoBB.at(0);
             QMap<QString, QVariant> devInfo;
@@ -896,6 +807,7 @@ void MainWindow::deviceRtlConnected(bool success){
         rtl_sweep_panel-> setMode(MODE_SWEEPING);
         centralStack1 -> setCurrentWidget(sweepCentral1);
         rtl_sweep_panel->show();
+         centralStack1->CurrentWidget() -> EnableToolBarActions(true);
         centralStack1->CurrentWidget()->changeMode(BB_SWEEPING);
     }
 }

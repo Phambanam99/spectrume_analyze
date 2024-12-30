@@ -100,17 +100,23 @@ bool DeviceRtlSdr::Reconfigure(const SweepSettings *s, Trace *t) {
 
         // Set sample rate
         sampleRate = sampleRates[s -> SampleRateRtl()];
+        int lenfft = lentFFt(s -> FftLenRtl());
+
         set_sample_rate(sampleRate);
+
         t->SetSettings(*s);
-        t->SetSize(1024); // Example size
-        t->SetFreq(s->Span().Val() /1024, s->Center() - s->Span() / 2);
-        t->SetUpdateRange(0, 1024);
+
+        t->SetSize((int)lenfft); // Example size
+qDebug() << "Reconfig rtlsdr" << lenfft;
+        t->SetFreq(s->Span().Val() /lenfft, s->Center() - s->Span() / 2);
+
+        t->SetUpdateRange(0, lenfft);
 
         // No direct function to get diagnostics in RTL-SDR
         last_temp = 0;
         voltage = 0;
         current = 0;
-        qDebug() << "Reconfig rtlsdr";
+
     return true;
 }
 
@@ -270,7 +276,7 @@ void DeviceRtlSdr::set_gain(int gain) {
     int status = 0;
     status += rtlsdr_set_tuner_gain_mode(device, 1);
     status += rtlsdr_set_tuner_gain(device, gain);
-
+    qDebug() << "status" <<status;
     if (status != 0) {
         throw RPFexception(
             "RTL device: could not set gain.",

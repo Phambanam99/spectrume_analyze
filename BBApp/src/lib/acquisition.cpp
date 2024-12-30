@@ -9,6 +9,7 @@
 #include "metadata.h"
 #include <math.h>
 #include "../model/device_rtlsdr.h"
+#include <QTime>
 std::vector<float> AuxData::calculateWindowFunction(int N, const std::string& type) {
     std::vector<float> window(N);
      const double M_PI  =3.141592653589793238463;
@@ -127,6 +128,7 @@ Plan::Plan(Params& params_, int actual_samplerate_) :
     else {
         freqs_to_tune.push_back(params.cfreq);
     }
+//    print();
 }
 
 void Plan::print() const {
@@ -135,6 +137,7 @@ void Plan::print() const {
     std::cerr << "Total number of (complex) samples to collect: " << (int64_t)params.N*params.repeats << std::endl;
     std::cerr << "Buffer length: " << params.buf_length << std::endl;
     std::cerr << "Number of averaged spectra: " << params.repeats << std::endl;
+    std::cerr << "actual_samplerate " << actual_samplerate << std::endl;;
     std::cerr << "Estimated time of measurements: " << (double)params.N * params.repeats / actual_samplerate << " seconds" << std::endl;
     if (params.strict_time)
         std::cerr << "Acquisition will unconditionally terminate after " << params.integration_time << " seconds." << std::endl;
@@ -160,139 +163,15 @@ Acquisition::Acquisition(const Params& params_,
 #include <iostream>
 void Acquisition::runReceiver_()
 {
-//    Params params;
-//    params.N = 1024;                      // Số bins trong FFT
-//    params.window = true;                 // Sử dụng window function
-//    params.baseline = true;               // Sử dụng baseline correction
-//    params.cropPercentage = 10.0;         // Loại bỏ 10% bins ở hai biên FFT
-//    params.hops = 1;                      // Chỉ quét một lần
-//    params.dev_index = 0;                 // Chỉ số thiết bị RTL-SDR
-//    params.gain = 372;                    // Độ khuếch đại (gain)
-//    params.sample_rate = 3200000;         // Tốc độ mẫu (sample rate)
-//    params.cfreq = 1420405752;
-//    // Read auxiliary data for window function and baseline correction.
-//    AuxData auxData(params);
-
-//    // Set up RTL-SDR device.
-//    DeviceRtlSdr rtldev;
-
-//    // Print the available gains and select the one nearest to the requested gain.
-//    rtldev.print_gains();
-//    int gain = rtldev.nearest_gain(params.gain);
-//    std::cerr << "Selected nearest available gain: " << gain
-//              << " (" << 0.1*gain << " dB)" << std::endl;
-//    rtldev.set_gain(gain);
-
-//    try {
-//        rtldev.set_frequency(params.cfreq);
-//    }
-//    catch (RPFexception&) {}
-
-//    // Set frequency correction
-//    if (params.ppm_error != 0) {
-//        rtldev.set_freq_correction(params.ppm_error);
-//        std::cerr << "PPM error set to: " << params.ppm_error << std::endl;
-//    }
-
-//    // Set sample rate
-//    rtldev.set_sample_rate(params.sample_rate);
-//    int actual_samplerate = rtldev.sample_rate();
-//    std::cerr << "Actual sample rate: " << actual_samplerate << " Hz" << std::endl;
-
-//    // Create a plan of the operation. This will calculate the number of repeats,
-//    // adjust the buffer size for optimal performance and create a list of frequency
-//    // hops.
-//    Plan plan(params, actual_samplerate);
-//    // Print info on capture time and associated specifics.
-//    plan.print();
-
-//    //Begin the work: prepare data buffers
-//    Datastore data(params, auxData.window_values);
-
-
-//    params.finalfreq = plan.freqs_to_tune.back();
-//    //Read from device and do FFT
-//    do {
-//        for (auto iter = plan.freqs_to_tune.begin(); iter != plan.freqs_to_tune.end();) {
-//            // Begin a new data acquisition.
-//             Acquisition acquisition(params, auxData, rtldev, data, actual_samplerate, *iter);
-//            try {
-//                // Read the required amount of data and process it.
-//                acquisition.run();
-//                iter++;
-//            }
-//            catch (TuneError &e) {
-//                // The receiver was unable to tune to this frequency. It might be just a "dead"
-//                // spot of the receiver. Remove this frequency from the list and continue.
-//                std::cerr << "Unable to tune to " << e.frequency() << ". Dropping from frequency list." << std::endl;
-//                iter = plan.freqs_to_tune.erase(iter);
-//                continue;
-//            }
-
-//            // Print a summary (number of samples, readouts etc.) to stderr.
-//            if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) acquisition.print_summary();
-//            // Write the gathered data to stdout.
-//            std::vector<float>  pwr = acquisition.caculatePwr();
-
-//        }
-//        // if requested, avoid repeating all the printouts, just do that one time:
-//        if( (params.outcnt == 0 && params.talkless) ) params.outcnt++;
-//    } while ( true );
-
-//    if (plan.freqs_to_tune.size() == 0) {
-//        // No valid frequencies left in the list. This is certainly not OK.
-//        throw RPFexception("No valid frequencies left.", ReturnValue::AcquisitionError);
-//    }
 }
 
 void Acquisition::run() {
-    // Set center frequency.
-    // There have been accounts of hardware being stubborn and refusing to
-    // tune to the desired frequency on random occasions despite being able
-    // to tune to that same frequency at other times. Such hiccups seem to
-    // be rare. We handle them by a naive and stupid, but seemingly effective
-    // method of persuasion.
-    const int max_tune_tries = 3;
-    bool success = false;
-    for (int tune_try = 0; !success && tune_try < max_tune_tries; tune_try++)
-    {
-        // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Tuning to " << freq << " Hz (try " << tune_try + 1 << ")" << std::endl;
-
-        try {
-            rtldev.set_frequency(params.cfreq);
-            tuned_freq = rtldev.frequency();
-            if (tuned_freq != 0)
-                success = true;
-        }
-        catch (RPFexception) {}
-    }
-
-    // Check if the frequency was actually successfully set.
-    if (!success) {
-        //Warning: librtlsdr does not tell you of all cases when tuner cannot lock PLL, despite clearly writing so to the stderr!
-        //TODO: Fix librtlsdr.
-        throw TuneError(freq);
-    }
-
-    // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Device tuned to: " << tuned_freq << " Hz" << std::endl;
     std::fill(data.pwr.begin(), data.pwr.end(), 0);
     data.acquisition_finished = false;
     data.repeats_done = 0;
 
     //std::thread t(&Datastore::fftThread, std::ref(data));
     std::thread t(&Datastore::fftThread, &data);
-
-    // Record the start-of-acquisition timestamp.
-//    startAcqTimestamp = currentDateTime();
-//    time(&scanBeg);
-//    if(cntTimeStamps==0) {
-//        firstAcqTimestamp = currentDateTime();
-//        cntTimeStamps++;
-//    }
-    // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Acquisition started at " << startAcqTimestamp << std::endl;
-
-    // Calculate the stop time. This will only be effective if --strict-time was given.
-//    std::chrono::steady_clock::time_point stopTime = std::chrono::steady_clock::now() + std::chrono::milliseconds(int64_t(params.integration_time*1000));
 
     std::unique_lock<std::mutex>
         status_lock(data.status_mutex, std::defer_lock);
@@ -349,22 +228,7 @@ void Acquisition::run() {
             status_lock.unlock();
         }
 
-//        if (params.strict_time && (std::chrono::steady_clock::now() >= stopTime))
-//            break;
-
-        // See if we have been instructed to conclude this measurement immediately.
-        //if (interrupts && checkInterrupt(InterruptState::FinishNow))
-
     }
-
-    // Record the end-of-acquisition timestamp.
-//    endAcqTimestamp = currentDateTime();
-//    time(&scanEnd);
-//    lastAcqTimestamp = currentDateTime();
-//    sumScanDur = sumScanDur + difftime(scanEnd, scanBeg);
-//    avgScanDur = sumScanDur / metaRows;
-
-    // if( (params.outcnt == 0 && params.talkless) || (params.talkless==false) ) std::cerr << "Acquisition done at " << endAcqTimestamp << std::endl;
 
     status_lock.lock();
     data.acquisition_finished = true;
@@ -497,7 +361,7 @@ float* Acquisition::caculatePwr() {
     }
 
     for (int i = initialBIN; i < finalBIN; i++) {
-        freq = tuned_freq + (i - params.N / 2.0) * actual_samplerate / params.N;
+        //freq = tuned_freq + (i - params.N / 2.0) * actual_samplerate / params.N;
 
         if (params.linear) {
             pwrdb = (data.pwr[i] / data.repeats_done / params.N / actual_samplerate)

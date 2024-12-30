@@ -42,6 +42,7 @@ private:
     FrequencyEntry *stop;
     FrequencyEntry *step;
     ComboEntry *gainRtl;
+    ComboEntry *fftLen;
     ComboEntry *sampleRateRtrl;
     DualButtonEntry *full_zero_span;
 

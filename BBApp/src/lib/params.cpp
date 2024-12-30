@@ -50,6 +50,7 @@ Params::Params() {
      freq_hopping_isSet = false;
     //It is senseless to waste a full buffer of data unless instructed to do so.
      repeats = buf_length/(2*N);
+//     repeats = 1;
      outcnt = 0;
      session_duration = 0;
      session_duration_isSet = false;

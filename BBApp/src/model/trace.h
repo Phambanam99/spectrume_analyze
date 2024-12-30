@@ -7,7 +7,7 @@
 
 #include <QColor>
 #include <QSize>
-
+#include <mutex>
 enum TraceType {
     OFF         = 0,
     NORMAL      = 1,
@@ -78,7 +78,9 @@ public:
     //void Activate(bool active) { _active = active; }
     void Disable() { _type = OFF; _active = false; }
     void SetColor(QColor newColor) { color = newColor; }
-    void SetSize(int newSize) { Alloc(newSize); }
+    void SetSize(int newSize) {
+//        std::lock_guard<std::mutex> lock(mtx); // Lock mutex
+        Alloc(newSize); }
     void SetFreq(double bin, double start) {
         _binSize = bin;
         _start = start;
@@ -108,8 +110,12 @@ public:
     double GetVarianceFromMean(const double mean) const;
     double GetStandardDeviation() const;
     void GetPeakList(std::vector<int> &peak_index_list) const;
-    float* Min() const { return _minBuf; }
-    float* Max() const { return _maxBuf; }
+    float* Min() const {
+//        std::lock_guard<std::mutex> lock(mtx);
+        return _minBuf; }
+    float* Max() const {
+//        std::lock_guard<std::mutex> lock(mtx);
+        return _maxBuf; }
     qint64 Time() const { return msFromEpoch; }
     int UpdateStart() const { return _updateStart; }
     int UpdateStop() const { return _updateStop; }
@@ -128,9 +134,11 @@ public:
     // Only relevant on SA fast sweep
     bool IsFullSweep() const { return _updateStop == _size; }
     void setMin(float *min){
+//        std::lock_guard<std::mutex> lock(mtx);
         _minBuf = min;
     }
     void setMax(float *max){
+//        std::lock_guard<std::mutex> lock(mtx);
         _maxBuf = max;
     }
 
@@ -157,7 +165,7 @@ private:
     float *_maxBuf;
     int _updateStart;
     int _updateStop;
-
+    mutable std::mutex mtx; // Mutex để bảo vệ truy cập
     qint64 msFromEpoch;
 
 private:
