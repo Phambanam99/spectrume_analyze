@@ -1,0 +1,10 @@
+[Dd]ebug/
+[Rr]elease/
+[Dd]ebug_x86/
+[Rr]elease_x86/
+BBApp/.vs/
+BBApp/.vscode/
+BBApp/.qtc_langd/
+BBApp/build-debug/
+BBApp/created/
+build*/
